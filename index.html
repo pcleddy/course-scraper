@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CNM Course Catalog</title>
+<style>
+  :root {
+    --blue-600: #2563eb;
+    --blue-700: #1d4ed8;
+    --blue-50: #eff6ff;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --green-100: #dcfce7;
+    --green-700: #15803d;
+    --red-100: #fee2e2;
+    --red-700: #b91c1c;
+    --yellow-100: #fef9c3;
+    --yellow-700: #a16207;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    line-height: 1.5;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1e3a5f 0%, var(--blue-700) 100%);
+    color: white;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .header h1 { font-size: 1.5rem; font-weight: 700; }
+  .header p { opacity: 0.85; font-size: 0.875rem; margin-top: 0.25rem; }
+
+  /* Controls bar */
+  .controls {
+    background: white;
+    border-bottom: 1px solid var(--gray-200);
+    padding: 1rem 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: flex-end;
+  }
+  .control-group { display: flex; flex-direction: column; gap: 0.25rem; }
+  .control-group label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  select, .search-input {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    background: white;
+    color: var(--gray-800);
+    min-width: 180px;
+  }
+  select:focus, .search-input:focus {
+    outline: none;
+    border-color: var(--blue-600);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+  }
+  .search-input { min-width: 280px; }
+
+  .btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-primary {
+    background: var(--blue-600);
+    color: white;
+  }
+  .btn-primary:hover { background: var(--blue-700); }
+  .btn-primary:disabled {
+    background: var(--gray-300);
+    cursor: not-allowed;
+  }
+  .btn-secondary {
+    background: white;
+    color: var(--gray-700);
+    border: 1px solid var(--gray-300);
+  }
+  .btn-secondary:hover { background: var(--gray-50); }
+
+  .spacer { flex: 1; }
+
+  /* Status bar */
+  .status-bar {
+    padding: 0.5rem 2rem;
+    font-size: 0.8125rem;
+    color: var(--gray-500);
+    background: white;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .status-bar .count { font-weight: 600; color: var(--gray-700); }
+
+  /* Progress */
+  .progress-wrap {
+    padding: 0 2rem;
+    background: white;
+    border-bottom: 1px solid var(--gray-200);
+    display: none;
+  }
+  .progress-wrap.active { display: block; padding: 0.75rem 2rem; }
+  .progress-bar-bg {
+    height: 6px;
+    background: var(--gray-200);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 0.375rem;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--blue-600);
+    border-radius: 3px;
+    transition: width 0.3s;
+    width: 0%;
+  }
+  .progress-text { font-size: 0.8125rem; color: var(--gray-500); }
+
+  /* Table */
+  .table-wrap {
+    overflow-x: auto;
+    padding: 0 1rem;
+    margin-top: 0.5rem;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+  }
+  thead th {
+    position: sticky;
+    top: 0;
+    background: var(--gray-100);
+    padding: 0.625rem 0.75rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--gray-600);
+    border-bottom: 2px solid var(--gray-200);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+  thead th:hover { background: var(--gray-200); }
+  thead th .sort-arrow { margin-left: 0.25rem; opacity: 0.4; }
+  thead th.sorted .sort-arrow { opacity: 1; }
+  tbody tr { border-bottom: 1px solid var(--gray-100); }
+  tbody tr:hover { background: var(--blue-50); }
+  td {
+    padding: 0.5rem 0.75rem;
+    white-space: nowrap;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  td.wrap { white-space: normal; min-width: 200px; }
+
+  /* Badges */
+  .badge {
+    display: inline-block;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .badge-open { background: var(--green-100); color: var(--green-700); }
+  .badge-closed { background: var(--red-100); color: var(--red-700); }
+  .badge-waitlist { background: var(--yellow-100); color: var(--yellow-700); }
+
+  /* Empty / loading states */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--gray-400);
+  }
+  .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+  .empty-state p { font-size: 1rem; }
+
+  .spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--gray-300);
+    border-top-color: var(--blue-600);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+    margin-right: 0.5rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* CORS notice */
+  .cors-notice {
+    margin: 2rem;
+    padding: 1.25rem;
+    background: var(--yellow-100);
+    border: 1px solid #fde68a;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--yellow-700);
+    display: none;
+  }
+  .cors-notice code {
+    background: rgba(0,0,0,0.08);
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    font-size: 0.8125rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .controls { padding: 0.75rem 1rem; }
+    .search-input { min-width: 100%; }
+    .table-wrap { padding: 0 0.5rem; }
+    td, th { padding: 0.375rem 0.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>CNM Course Catalog</h1>
+  <p>Browse the Central New Mexico Community College class schedule</p>
+</div>
+
+<div class="cors-notice" id="corsNotice">
+  <strong>Live Mode Note:</strong> This page can use a bundled local data snapshot with no
+  server. If you switch back to live Banner requests from a local file or GitHub Pages, the
+  browser may block cross-origin requests. You can work around that with a small local proxy:
+  <br><br>
+  <code>npx local-cors-proxy --proxyUrl https://banner.cnm.edu --port 8010</code>
+  <br><br>
+  Then check the "Use CORS Proxy" box below and reload. The bundled local snapshot does not
+  need this. Alternatively, use a browser extension that adds CORS headers.
+</div>
+
+<div class="controls" id="controls">
+  <div class="control-group">
+    <label>Term</label>
+    <select id="termSelect" disabled>
+      <option>Loading terms...</option>
+    </select>
+  </div>
+
+  <div class="control-group">
+    <label>Subject</label>
+    <select id="subjectSelect" disabled>
+      <option value="">All Subjects</option>
+    </select>
+  </div>
+
+  <div class="control-group">
+    <label>Status</label>
+    <select id="statusFilter">
+      <option value="">All</option>
+      <option value="open">Open</option>
+      <option value="closed">Closed</option>
+      <option value="waitlist">Waitlist Available</option>
+    </select>
+  </div>
+
+  <div class="control-group">
+    <label>Search</label>
+    <input type="text" class="search-input" id="searchInput"
+           placeholder="Search by title, CRN, instructor, course number...">
+  </div>
+
+  <div class="control-group">
+    <label>&nbsp;</label>
+    <button class="btn btn-primary" id="loadBtn" disabled>Load Courses</button>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="control-group">
+    <label>&nbsp;</label>
+    <button class="btn btn-secondary" id="exportBtn" disabled>Export CSV</button>
+  </div>
+
+  <div class="control-group" style="flex-direction:row; align-items:center; gap:0.375rem; margin-top:1.2rem;">
+    <input type="checkbox" id="proxyToggle">
+    <label for="proxyToggle" style="font-size:0.75rem; text-transform:none; letter-spacing:normal; cursor:pointer;">
+      Use CORS Proxy (localhost:8010)
+    </label>
+  </div>
+</div>
+
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-text" id="progressText">Loading...</div>
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="progressFill"></div>
+  </div>
+</div>
+
+<div class="status-bar" id="statusBar" style="display:none;">
+  <span>Showing <span class="count" id="shownCount">0</span> of <span class="count" id="totalCount">0</span> sections</span>
+  <span id="lastLoaded"></span>
+</div>
+
+<div class="table-wrap">
+  <table id="courseTable" style="display:none;">
+    <thead>
+      <tr id="tableHead"></tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+</div>
+
+<div class="empty-state" id="emptyState">
+  <div class="icon">📚</div>
+  <p>Select a term and click <strong>Load Courses</strong> to browse the catalog.</p>
+</div>
+
+<script src="./cnm_courses_data.js"></script>
+<script>
+// ============================================================
+// Configuration
+// ============================================================
+const BANNER_BASE = 'https://banner.cnm.edu/StudentRegistrationSsb/ssb';
+const PROXY_BASE  = 'http://localhost:8010/proxy/StudentRegistrationSsb/ssb';
+
+function apiBase() {
+  return document.getElementById('proxyToggle').checked ? PROXY_BASE : BANNER_BASE;
+}
+
+// Visible columns in order
+const TABLE_COLS = [
+  { key: 'status',          label: 'Status',       sortable: true,  wrap: false },
+  { key: 'courseReferenceNumber', label: 'CRN',     sortable: true,  wrap: false },
+  { key: 'subject',         label: 'Subj',         sortable: true,  wrap: false },
+  { key: 'courseNumber',    label: 'Num',           sortable: true,  wrap: false },
+  { key: 'courseTitle',     label: 'Title',         sortable: true,  wrap: true },
+  { key: 'creditHours',    label: 'Cr',            sortable: true,  wrap: false },
+  { key: 'enrollment',     label: 'Enrl',          sortable: true,  wrap: false },
+  { key: 'maximumEnrollment', label: 'Cap',        sortable: true,  wrap: false },
+  { key: 'seatsAvailable', label: 'Seats',         sortable: true,  wrap: false },
+  { key: 'waitCount',      label: 'Wait',          sortable: true,  wrap: false },
+  { key: 'faculty_names',  label: 'Instructor',    sortable: true,  wrap: true },
+  { key: 'meeting_days',   label: 'Days',          sortable: true,  wrap: false },
+  { key: 'meeting_times',  label: 'Time',          sortable: true,  wrap: false },
+  { key: 'meeting_building', label: 'Building',    sortable: true,  wrap: false },
+  { key: 'meeting_room',   label: 'Room',          sortable: true,  wrap: false },
+  { key: 'campusDescription', label: 'Campus',     sortable: true,  wrap: false },
+  { key: 'instructionalMethodDescription', label: 'Method', sortable: true, wrap: false },
+];
+
+// ============================================================
+// State
+// ============================================================
+let allSections = [];
+let displayedSections = [];
+let sortCol = null;
+let sortDir = 'asc';
+
+// ============================================================
+// DOM refs
+// ============================================================
+const $termSelect    = document.getElementById('termSelect');
+const $subjectSelect = document.getElementById('subjectSelect');
+const $statusFilter  = document.getElementById('statusFilter');
+const $searchInput   = document.getElementById('searchInput');
+const $loadBtn       = document.getElementById('loadBtn');
+const $exportBtn     = document.getElementById('exportBtn');
+const $progressWrap  = document.getElementById('progressWrap');
+const $progressText  = document.getElementById('progressText');
+const $progressFill  = document.getElementById('progressFill');
+const $statusBar     = document.getElementById('statusBar');
+const $shownCount    = document.getElementById('shownCount');
+const $totalCount    = document.getElementById('totalCount');
+const $lastLoaded    = document.getElementById('lastLoaded');
+const $tableHead     = document.getElementById('tableHead');
+const $tableBody     = document.getElementById('tableBody');
+const $courseTable    = document.getElementById('courseTable');
+const $emptyState    = document.getElementById('emptyState');
+const $corsNotice    = document.getElementById('corsNotice');
+const $proxyToggle   = document.getElementById('proxyToggle');
+const $proxyLabel    = document.querySelector('label[for="proxyToggle"]');
+
+// ============================================================
+// Offline data helpers
+// ============================================================
+const OFFLINE_DATA = normalizeOfflineBundle(window.CNM_COURSE_DATA);
+
+function toFiniteNumber(value) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function normalizeOfflineSection(section) {
+  const seats = toFiniteNumber(section?.seatsAvailable);
+  const waitAvailable = toFiniteNumber(section?.waitAvailable);
+  let status = section?.status || 'closed';
+  if (!section?.status) {
+    if (seats > 0) status = 'open';
+    else if (waitAvailable > 0) status = 'waitlist';
+  }
+
+  return {
+    ...section,
+    status,
+    term: String(section?.term || ''),
+    courseReferenceNumber: String(section?.courseReferenceNumber || ''),
+    subject: String(section?.subject || ''),
+    subjectDescription: String(section?.subjectDescription || ''),
+    courseNumber: String(section?.courseNumber || ''),
+    courseTitle: String(section?.courseTitle || ''),
+    creditHours: section?.creditHours ?? section?.creditHourLow ?? '',
+    maximumEnrollment: section?.maximumEnrollment ?? '',
+    enrollment: section?.enrollment ?? '',
+    seatsAvailable: section?.seatsAvailable ?? 0,
+    waitCapacity: section?.waitCapacity ?? '',
+    waitCount: section?.waitCount ?? '',
+    waitAvailable: section?.waitAvailable ?? 0,
+    campusDescription: String(section?.campusDescription || ''),
+    instructionalMethodDescription: String(section?.instructionalMethodDescription || ''),
+    scheduleTypeDescription: String(section?.scheduleTypeDescription || ''),
+    faculty_names: String(section?.faculty_names || 'TBA'),
+    meeting_days: String(section?.meeting_days || ''),
+    meeting_times: String(section?.meeting_times || ''),
+    meeting_building: String(section?.meeting_building || ''),
+    meeting_room: String(section?.meeting_room || ''),
+  };
+}
+
+function normalizeOfflineBundle(bundle) {
+  if (!bundle || !Array.isArray(bundle.sections) || !bundle.sections.length) return null;
+
+  const sections = bundle.sections.map(normalizeOfflineSection);
+  const termMap = new Map();
+
+  for (const term of (bundle.terms || [])) {
+    const code = String(term?.code || '');
+    if (!code) continue;
+    termMap.set(code, {
+      code,
+      description: String(term?.description || `Term ${code}`),
+    });
+  }
+
+  for (const section of sections) {
+    if (!section.term || termMap.has(section.term)) continue;
+    termMap.set(section.term, {
+      code: section.term,
+      description: `Term ${section.term}`,
+    });
+  }
+
+  return {
+    generatedAt: bundle.generatedAt || '',
+    terms: [...termMap.values()].sort((a, b) => b.code.localeCompare(a.code)),
+    sections,
+  };
+}
+
+function usingOfflineBundle() {
+  return Boolean(OFFLINE_DATA && OFFLINE_DATA.sections.length);
+}
+
+function populateTermOptions(terms) {
+  $termSelect.innerHTML = '';
+  for (const t of terms) {
+    const opt = document.createElement('option');
+    opt.value = t.code;
+    opt.textContent = t.description;
+    $termSelect.appendChild(opt);
+  }
+}
+
+function formatBundleTimestamp(value) {
+  if (!value) return '';
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? '' : d.toLocaleString();
+}
+
+// ============================================================
+// Banner API helpers
+// ============================================================
+async function bannerFetch(path, options = {}) {
+  const url = apiBase() + path;
+  const resp = await fetch(url, {
+    credentials: 'include',
+    ...options,
+  });
+  if (!resp.ok) throw new Error(`HTTP ${resp.status} for ${path}`);
+  return resp;
+}
+
+async function getTerms() {
+  const r = await bannerFetch('/classSearch/getTerms?offset=1&max=50&searchTerm=');
+  return r.json();
+}
+
+async function selectTerm(termCode) {
+  await bannerFetch(`/term/search?mode=search`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `term=${termCode}`,
+  });
+}
+
+async function getSubjects(termCode) {
+  const all = [];
+  let offset = 1;
+  while (true) {
+    const r = await bannerFetch(
+      `/classSearch/get_subject?term=${termCode}&offset=${offset}&max=200&searchTerm=`
+    );
+    const page = await r.json();
+    if (!page || page.length === 0) break;
+    all.push(...page);
+    if (page.length < 200) break;
+    offset += 200;
+  }
+  return all;
+}
+
+async function resetSearch() {
+  await bannerFetch('/classSearch/resetDataForm', { method: 'POST' });
+}
+
+async function searchCourses(termCode, subjectCode, offset = 0, pageSize = 500) {
+  let qs = `txt_term=${termCode}&startDatepicker=&endDatepicker=`
+    + `&uniqueSessionId=${crypto.randomUUID ? crypto.randomUUID() : Date.now()}`
+    + `&pageOffset=${offset}&pageMaxSize=${pageSize}`
+    + `&sortColumn=subjectDescription&sortDirection=asc`;
+  if (subjectCode) qs += `&txt_subject=${subjectCode}`;
+
+  const r = await bannerFetch(`/searchResults/searchResults?${qs}`);
+  return r.json();
+}
+
+// ============================================================
+// Data extraction (mirrors Python extract_row)
+// ============================================================
+function extractRow(section) {
+  const faculty = section.faculty || [];
+  const facultyNames = faculty.length
+    ? faculty.map(f => f.displayName || 'TBA').join('; ')
+    : 'TBA';
+
+  const meetings = section.meetingsFaculty || [];
+  const daysList = [], timesList = [], buildings = [], rooms = [];
+
+  for (const m of meetings) {
+    const mt = m.meetingTime || {};
+    let days = '';
+    for (const [d, abbr] of [['monday','Mo'],['tuesday','Tu'],['wednesday','We'],
+         ['thursday','Th'],['friday','Fr'],['saturday','Sa'],['sunday','Su']]) {
+      if (mt[d]) days += abbr;
+    }
+    daysList.push(days || 'TBA');
+
+    const b = mt.beginTime || '', e = mt.endTime || '';
+    if (b && e) {
+      timesList.push(`${b.slice(0,2)}:${b.slice(2)}-${e.slice(0,2)}:${e.slice(2)}`);
+    } else {
+      timesList.push('TBA');
+    }
+    buildings.push(mt.buildingDescription || '');
+    rooms.push(mt.room || '');
+  }
+
+  const seats = section.seatsAvailable ?? 0;
+  const waitAvail = section.waitAvailable ?? 0;
+  let status = 'closed';
+  if (seats > 0) status = 'open';
+  else if (waitAvail > 0) status = 'waitlist';
+
+  return {
+    status,
+    term: section.term || '',
+    courseReferenceNumber: section.courseReferenceNumber || '',
+    subject: section.subject || '',
+    subjectDescription: section.subjectDescription || '',
+    courseNumber: section.courseNumber || '',
+    courseTitle: section.courseTitle || '',
+    creditHours: section.creditHours ?? section.creditHourLow ?? '',
+    maximumEnrollment: section.maximumEnrollment ?? '',
+    enrollment: section.enrollment ?? '',
+    seatsAvailable: seats,
+    waitCapacity: section.waitCapacity ?? '',
+    waitCount: section.waitCount ?? '',
+    waitAvailable: waitAvail,
+    campusDescription: section.campusDescription || '',
+    instructionalMethodDescription: section.instructionalMethodDescription || '',
+    scheduleTypeDescription: section.scheduleTypeDescription || '',
+    faculty_names: facultyNames,
+    meeting_days: daysList.join(' | '),
+    meeting_times: timesList.join(' | '),
+    meeting_building: buildings.join(' | '),
+    meeting_room: rooms.join(' | '),
+  };
+}
+
+// ============================================================
+// Load all courses
+// ============================================================
+async function loadCourses() {
+  const termCode = $termSelect.value;
+  if (!termCode) return;
+
+  $loadBtn.disabled = true;
+  $loadBtn.innerHTML = '<span class="spinner"></span>Loading...';
+  $exportBtn.disabled = true;
+  $progressWrap.classList.add('active');
+  $courseTable.style.display = 'none';
+  $emptyState.style.display = 'none';
+  $statusBar.style.display = 'none';
+  allSections = [];
+
+  try {
+    if (usingOfflineBundle()) {
+      $progressText.textContent = 'Loading bundled course data...';
+      $progressFill.style.width = '35%';
+
+      allSections = OFFLINE_DATA.sections.filter(s => s.term === termCode);
+      if (!allSections.length && OFFLINE_DATA.terms.length === 1) {
+        allSections = [...OFFLINE_DATA.sections];
+      }
+
+      $progressText.textContent = `Done! Loaded ${allSections.length} sections from local data.`;
+      $progressFill.style.width = '100%';
+
+      populateSubjectFilter();
+      applyFilters();
+
+      const bundleStamp = formatBundleTimestamp(OFFLINE_DATA.generatedAt);
+      $lastLoaded.textContent = bundleStamp
+        ? `Bundled snapshot from ${bundleStamp}`
+        : 'Loaded from local bundled data';
+      $exportBtn.disabled = !allSections.length;
+
+      setTimeout(() => { $progressWrap.classList.remove('active'); }, 600);
+      return;
+    }
+
+    // 1) Select term in server session
+    $progressText.textContent = 'Setting term in session...';
+    $progressFill.style.width = '2%';
+    await selectTerm(termCode);
+
+    // 2) Get subjects
+    $progressText.textContent = 'Fetching subjects...';
+    $progressFill.style.width = '5%';
+    const subjects = await getSubjects(termCode);
+
+    // 3) Scrape each subject
+    for (let i = 0; i < subjects.length; i++) {
+      const subj = subjects[i];
+      const pct = 5 + Math.round((i / subjects.length) * 90);
+      $progressText.textContent = `Loading ${subj.description} (${i + 1}/${subjects.length})...`;
+      $progressFill.style.width = pct + '%';
+
+      await resetSearch();
+      await selectTerm(termCode);
+
+      let offset = 0;
+      while (true) {
+        const data = await searchCourses(termCode, subj.code, offset, 500);
+        if (!data || !data.data || data.data.length === 0) break;
+
+        for (const section of data.data) {
+          allSections.push(extractRow(section));
+        }
+
+        offset += 500;
+        if (offset >= (data.totalCount || 0)) break;
+      }
+    }
+
+    $progressText.textContent = `Done! Loaded ${allSections.length} sections.`;
+    $progressFill.style.width = '100%';
+
+    populateSubjectFilter();
+    applyFilters();
+
+    $lastLoaded.textContent = `Loaded at ${new Date().toLocaleTimeString()}`;
+    $exportBtn.disabled = false;
+
+    setTimeout(() => { $progressWrap.classList.remove('active'); }, 1500);
+
+  } catch (err) {
+    console.error('Load error:', err);
+    $progressText.textContent = `Error: ${err.message}`;
+    $progressFill.style.width = '0%';
+
+    if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
+      $corsNotice.style.display = 'block';
+    }
+  } finally {
+    $loadBtn.disabled = false;
+    $loadBtn.textContent = 'Load Courses';
+  }
+}
+
+// ============================================================
+// Populate subject dropdown from loaded data
+// ============================================================
+function populateSubjectFilter() {
+  const subjects = new Map();
+  for (const s of allSections) {
+    if (s.subject && !subjects.has(s.subject)) {
+      subjects.set(s.subject, s.subjectDescription || s.subject);
+    }
+  }
+  const sorted = [...subjects.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+
+  $subjectSelect.innerHTML = '<option value="">All Subjects</option>';
+  for (const [code, desc] of sorted) {
+    const opt = document.createElement('option');
+    opt.value = code;
+    opt.textContent = `${code} - ${desc}`;
+    $subjectSelect.appendChild(opt);
+  }
+  $subjectSelect.disabled = false;
+}
+
+// ============================================================
+// Filtering + searching
+// ============================================================
+function applyFilters() {
+  const subj = $subjectSelect.value;
+  const status = $statusFilter.value;
+  const query = $searchInput.value.toLowerCase().trim();
+
+  displayedSections = allSections.filter(s => {
+    if (subj && s.subject !== subj) return false;
+    if (status && s.status !== status) return false;
+    if (query) {
+      const hay = [
+        s.courseTitle, s.courseReferenceNumber, s.subject,
+        s.courseNumber, s.faculty_names, s.campusDescription,
+        s.instructionalMethodDescription, s.subjectDescription,
+      ].join(' ').toLowerCase();
+      if (!hay.includes(query)) return false;
+    }
+    return true;
+  });
+
+  if (sortCol !== null) {
+    applySorting();
+  }
+
+  renderTable();
+}
+
+function applySorting() {
+  const key = TABLE_COLS[sortCol].key;
+  displayedSections.sort((a, b) => {
+    let va = a[key] ?? '', vb = b[key] ?? '';
+    // Try numeric comparison
+    const na = Number(va), nb = Number(vb);
+    if (!isNaN(na) && !isNaN(nb)) {
+      return sortDir === 'asc' ? na - nb : nb - na;
+    }
+    va = String(va).toLowerCase();
+    vb = String(vb).toLowerCase();
+    if (va < vb) return sortDir === 'asc' ? -1 : 1;
+    if (va > vb) return sortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+}
+
+// ============================================================
+// Render table
+// ============================================================
+function buildTableHead() {
+  $tableHead.innerHTML = '';
+  for (let i = 0; i < TABLE_COLS.length; i++) {
+    const col = TABLE_COLS[i];
+    const th = document.createElement('th');
+    th.textContent = col.label;
+    if (col.sortable) {
+      const arrow = document.createElement('span');
+      arrow.className = 'sort-arrow';
+      arrow.textContent = sortCol === i ? (sortDir === 'asc' ? ' ▲' : ' ▼') : ' ⇅';
+      th.appendChild(arrow);
+      if (sortCol === i) th.classList.add('sorted');
+      th.addEventListener('click', () => {
+        if (sortCol === i) {
+          sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+          sortCol = i;
+          sortDir = 'asc';
+        }
+        applyFilters();
+        buildTableHead();
+      });
+    }
+    $tableHead.appendChild(th);
+  }
+}
+
+function renderTable() {
+  $tableBody.innerHTML = '';
+  $courseTable.style.display = displayedSections.length ? 'table' : 'none';
+  $statusBar.style.display = allSections.length ? 'flex' : 'none';
+  $emptyState.style.display = displayedSections.length ? 'none' : 'block';
+
+  if (!displayedSections.length && allSections.length) {
+    $emptyState.querySelector('.icon').textContent = '🔍';
+    $emptyState.querySelector('p').textContent = 'No courses match your filters.';
+  }
+
+  $shownCount.textContent = displayedSections.length.toLocaleString();
+  $totalCount.textContent = allSections.length.toLocaleString();
+
+  // Virtual-ish rendering: cap at 2000 visible rows for performance
+  const cap = Math.min(displayedSections.length, 2000);
+  const frag = document.createDocumentFragment();
+
+  for (let r = 0; r < cap; r++) {
+    const section = displayedSections[r];
+    const tr = document.createElement('tr');
+
+    for (const col of TABLE_COLS) {
+      const td = document.createElement('td');
+      if (col.wrap) td.classList.add('wrap');
+
+      if (col.key === 'status') {
+        const badge = document.createElement('span');
+        badge.className = 'badge badge-' + section.status;
+        badge.textContent = section.status === 'waitlist' ? 'Waitlist'
+          : section.status === 'open' ? 'Open' : 'Closed';
+        td.appendChild(badge);
+      } else {
+        td.textContent = section[col.key] ?? '';
+      }
+      tr.appendChild(td);
+    }
+    frag.appendChild(tr);
+  }
+
+  $tableBody.appendChild(frag);
+
+  if (displayedSections.length > cap) {
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.colSpan = TABLE_COLS.length;
+    td.style.textAlign = 'center';
+    td.style.padding = '1rem';
+    td.style.color = 'var(--gray-400)';
+    td.textContent = `Showing first ${cap} of ${displayedSections.length} results. Use filters to narrow down.`;
+    tr.appendChild(td);
+    $tableBody.appendChild(tr);
+  }
+}
+
+// ============================================================
+// CSV Export
+// ============================================================
+function exportCSV() {
+  if (!displayedSections.length) return;
+
+  const keys = TABLE_COLS.map(c => c.key);
+  const header = TABLE_COLS.map(c => c.label);
+
+  const rows = [header.join(',')];
+  for (const s of displayedSections) {
+    const vals = keys.map(k => {
+      let v = String(s[k] ?? '');
+      if (v.includes(',') || v.includes('"') || v.includes('\n')) {
+        v = '"' + v.replace(/"/g, '""') + '"';
+      }
+      return v;
+    });
+    rows.push(vals.join(','));
+  }
+
+  const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `cnm_courses_${$termSelect.value}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ============================================================
+// Init
+// ============================================================
+async function init() {
+  buildTableHead();
+
+  // Event listeners
+  $loadBtn.addEventListener('click', loadCourses);
+  $exportBtn.addEventListener('click', exportCSV);
+  $subjectSelect.addEventListener('change', applyFilters);
+  $statusFilter.addEventListener('change', applyFilters);
+
+  let searchTimeout;
+  $searchInput.addEventListener('input', () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(applyFilters, 250);
+  });
+
+  if (usingOfflineBundle()) {
+    populateTermOptions(OFFLINE_DATA.terms);
+    $termSelect.disabled = false;
+    $loadBtn.disabled = false;
+    $proxyToggle.checked = false;
+    $proxyToggle.disabled = true;
+    if ($proxyLabel) {
+      $proxyLabel.textContent = 'Live proxy not needed with bundled data';
+    }
+    return;
+  }
+
+  try {
+    const terms = await getTerms();
+    populateTermOptions(terms);
+    $termSelect.disabled = false;
+    $loadBtn.disabled = false;
+  } catch (err) {
+    console.error('Init error:', err);
+    $termSelect.innerHTML = '<option>Failed to load terms</option>';
+    $corsNotice.style.display = 'block';
+  }
+}
+
+init();
+</script>
+</body>
+</html>
