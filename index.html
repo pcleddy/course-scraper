@@ -648,7 +648,7 @@
   <div class="content" id="contentArea">
     <div class="empty-state" id="emptyState">
       <div class="icon">📚</div>
-      <p>Select a term and click <strong>Load Courses</strong> to get started.</p>
+      <p>Loading course catalog...</p>
     </div>
   </div>
 </div>
@@ -1353,6 +1353,7 @@ async function init() {
   activateSchoolSwitch();
 
   $loadBtn.addEventListener('click', loadCourses);
+  $termSelect.addEventListener('change', loadCourses);
   $exportBtn.addEventListener('click', exportCSV);
   $drawerToggle.addEventListener('click', openDrawer);
   $drawerOverlay.addEventListener('click', closeDrawer);
@@ -1381,6 +1382,8 @@ async function init() {
     $proxyToggle.checked = false;
     $proxyToggle.disabled = true;
     if ($proxyLabel) $proxyLabel.textContent = 'Bundled data';
+    pickBestTerm();
+    loadCourses();
     return;
   }
 
@@ -1389,11 +1392,23 @@ async function init() {
     populateTermOptions(terms);
     $termSelect.disabled = false;
     $loadBtn.disabled = false;
+    pickBestTerm();
+    loadCourses();
   } catch (err) {
     console.error('Init error:', err);
     $termSelect.innerHTML = '<option>Failed to load terms</option>';
     $corsNotice.style.display = 'block';
   }
+}
+
+/**
+ * Auto-select the best term: first non-"View Only" option,
+ * which is typically the current or upcoming semester.
+ */
+function pickBestTerm() {
+  const opts = [...$termSelect.options];
+  const best = opts.find(o => !o.textContent.toLowerCase().includes('view only'));
+  if (best) $termSelect.value = best.value;
 }
 
 init();
