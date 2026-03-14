@@ -126,7 +126,7 @@ class BannerClient:
         """Fetch all subjects for a given term."""
         subjects = []
         offset = 1
-        page_size = 100
+        page_size = 500
         while True:
             r = self.session.get(
                 f"{self.base_url}/classSearch/get_subject",

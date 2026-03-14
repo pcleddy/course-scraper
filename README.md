@@ -1,25 +1,23 @@
-# Course Scraper
+# CNM & UNM Course Catalog Browser
 
-Small Python scraper plus a static browser UI for course catalogs.
+A faster, friendlier way to browse the CNM and UNM class schedules. Replaces Ellucian Banner's clunky search-one-subject-at-a-time interface with a single-page app you can browse offline or host on GitHub Pages.
+
+Browse by subject, see what's open at a glance, click into any section for full details — instructor, schedule, building, seat availability, waitlist status.
 
 ## Live Site
 
-- GitHub Pages: [pcleddy.github.io/course-scraper](https://pcleddy.github.io/course-scraper/)
-- CNM view: [pcleddy.github.io/course-scraper](https://pcleddy.github.io/course-scraper/)
-- UNM view: [pcleddy.github.io/course-scraper/?school=unm](https://pcleddy.github.io/course-scraper/?school=unm)
+- **CNM:** [pcleddy.github.io/course-scraper](https://pcleddy.github.io/course-scraper/)
+- **UNM:** [pcleddy.github.io/course-scraper/?school=unm](https://pcleddy.github.io/course-scraper/?school=unm)
 
-Current scope:
+## Schools & Terms
 
-- CNM course scraping and local browsing
-- UNM course scraping through the same Banner flow
+- **Central New Mexico Community College (CNM)** — Albuquerque, NM
+- **University of New Mexico (UNM)** — Albuquerque, NM
+- Supports any term available in Banner (Spring 2026, Summer 2026, Fall 2025, etc.)
 
-The current scraper pulls course data from CNM's Banner endpoints and writes three outputs:
+## What This Does
 
-- `cnm_courses_<term>.csv`
-- `cnm_courses_<term>.xlsx`
-- `cnm_courses_data.js`
-
-The browser UI in `index.html` reads `cnm_courses_data.js`, so you can open the page directly from disk without running a local web server.
+A Python scraper pulls every course section from Banner's class search API and writes three outputs per school: a CSV, an Excel workbook, and a JavaScript data bundle. The browser UI (`index.html`) reads the JS bundle so it works offline — no server, no CORS headaches, just open the file.
 
 ## What's In This Repo
 
@@ -146,3 +144,11 @@ npx local-cors-proxy --proxyUrl https://banner.cnm.edu --port 8010
 ```
 
 Then enable the proxy checkbox in the UI.
+
+## What Is Ellucian Banner?
+
+Ellucian Banner is the student information system used by hundreds of colleges and universities, including CNM and UNM. Its built-in class search interface (Banner Self-Service / StudentRegistrationSsb) only lets you search one subject at a time with no way to see the full catalog at once. This project works around that limitation by querying every subject programmatically and presenting the results in a browsable UI.
+
+## Topics
+
+`cnm` `unm` `central-new-mexico` `university-of-new-mexico` `albuquerque` `new-mexico` `course-catalog` `class-schedule` `class-search` `ellucian-banner` `banner-scraper` `student-registration` `open-sections` `seat-availability` `course-browser` `community-college` `higher-education` `spring-2026`
