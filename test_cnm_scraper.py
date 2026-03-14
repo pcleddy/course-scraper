@@ -14,6 +14,7 @@ import pytest
 
 from cnm_course_scraper import (
     BannerClient,
+    build_output_paths,
     extract_row,
     scrape_all_courses,
     build_web_bundle,
@@ -588,6 +589,22 @@ class TestWebBundle:
         assert payload["terms"][0]["description"] == "SPRING 2026"
         assert payload["sections"][0]["courseTitle"] == "Intro to Computer Science"
         path.unlink()
+
+
+class TestOutputPaths:
+
+    def test_build_output_paths_uses_stem_and_bundle_name(self):
+        output_dir = Path("/tmp/course-scraper-test")
+        paths = build_output_paths(
+            output_dir,
+            "unm_courses",
+            "202610",
+            "unm_courses_data.js",
+        )
+
+        assert paths["csv"] == output_dir / "unm_courses_202610.csv"
+        assert paths["xlsx"] == output_dir / "unm_courses_202610.xlsx"
+        assert paths["bundle"] == output_dir / "unm_courses_data.js"
 
 
 # ---------------------------------------------------------------------------

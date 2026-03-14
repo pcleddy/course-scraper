@@ -43,8 +43,47 @@
     padding: 1.5rem 2rem;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
+  .header-inner {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .header-copy {
+    min-width: 0;
+  }
   .header h1 { font-size: 1.5rem; font-weight: 700; }
   .header p { opacity: 0.85; font-size: 0.875rem; margin-top: 0.25rem; }
+  .school-switch {
+    display: inline-flex;
+    gap: 0.375rem;
+    padding: 0.25rem;
+    border-radius: 9999px;
+    background: rgba(255,255,255,0.12);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14);
+  }
+  .school-pill {
+    appearance: none;
+    border: none;
+    border-radius: 9999px;
+    background: transparent;
+    color: rgba(255,255,255,0.82);
+    cursor: pointer;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 0.5rem 0.85rem;
+    transition: background 0.15s, color 0.15s, transform 0.15s;
+  }
+  .school-pill:hover {
+    background: rgba(255,255,255,0.1);
+    color: white;
+  }
+  .school-pill.active {
+    background: white;
+    color: var(--blue-700);
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18);
+  }
 
   /* Controls bar */
   .controls {
@@ -236,6 +275,19 @@
 
   /* Responsive */
   @media (max-width: 768px) {
+    .header { padding: 1rem; }
+    .header-inner {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .school-switch {
+      width: 100%;
+      justify-content: stretch;
+    }
+    .school-pill {
+      flex: 1;
+      text-align: center;
+    }
     .controls { padding: 0.75rem 1rem; }
     .search-input { min-width: 100%; }
     .table-wrap { padding: 0 0.5rem; }
@@ -246,8 +298,16 @@
 <body>
 
 <div class="header">
-  <h1>CNM Course Catalog</h1>
-  <p>Browse the Central New Mexico Community College class schedule</p>
+  <div class="header-inner">
+    <div class="header-copy">
+      <h1 id="pageTitle">CNM Course Catalog</h1>
+      <p id="pageSubtitle">Browse the Central New Mexico Community College class schedule</p>
+    </div>
+    <div class="school-switch" aria-label="University switch">
+      <button type="button" class="school-pill" data-school-switch="cnm">CNM</button>
+      <button type="button" class="school-pill" data-school-switch="unm">UNM</button>
+    </div>
+  </div>
 </div>
 
 <div class="cors-notice" id="corsNotice">
@@ -255,7 +315,7 @@
   server. If you switch back to live Banner requests from a local file or GitHub Pages, the
   browser may block cross-origin requests. You can work around that with a small local proxy:
   <br><br>
-  <code>npx local-cors-proxy --proxyUrl https://banner.cnm.edu --port 8010</code>
+  <code id="proxyCommand">npx local-cors-proxy --proxyUrl https://banner.cnm.edu --port 8010</code>
   <br><br>
   Then check the "Use CORS Proxy" box below and reload. The bundled local snapshot does not
   need this. Alternatively, use a browser extension that adds CORS headers.
@@ -338,13 +398,49 @@
   <p>Select a term and click <strong>Load Courses</strong> to browse the catalog.</p>
 </div>
 
-<script src="./cnm_courses_data.js"></script>
+<script>
+(() => {
+  const params = new URLSearchParams(window.location.search);
+  const school = (params.get('school') || 'cnm').toLowerCase();
+  const configBySchool = {
+    cnm: {
+      school: 'cnm',
+      pageTitle: 'CNM Course Catalog',
+      pageSubtitle: 'Browse the Central New Mexico Community College class schedule',
+      bannerBase: 'https://banner.cnm.edu/StudentRegistrationSsb/ssb',
+      proxyBase: 'http://localhost:8010/proxy/StudentRegistrationSsb/ssb',
+      bundleSrc: './cnm_courses_data.js',
+      exportStem: 'cnm_courses',
+    },
+    unm: {
+      school: 'unm',
+      pageTitle: 'UNM Course Catalog',
+      pageSubtitle: 'Browse the University of New Mexico class schedule',
+      bannerBase: 'https://lobowebapp.unm.edu/StudentRegistrationSsb/ssb',
+      proxyBase: 'http://localhost:8010/proxy/StudentRegistrationSsb/ssb',
+      bundleSrc: './unm_courses_data.js',
+      exportStem: 'unm_courses',
+    },
+  };
+
+  window.COURSE_UI_CONFIG = configBySchool[school] || configBySchool.cnm;
+  document.write(`<script src="${window.COURSE_UI_CONFIG.bundleSrc}"><\/script>`);
+})();
+</script>
 <script>
 // ============================================================
 // Configuration
 // ============================================================
-const BANNER_BASE = 'https://banner.cnm.edu/StudentRegistrationSsb/ssb';
-const PROXY_BASE  = 'http://localhost:8010/proxy/StudentRegistrationSsb/ssb';
+const UI_CONFIG = window.COURSE_UI_CONFIG || {
+  school: 'cnm',
+  pageTitle: 'CNM Course Catalog',
+  pageSubtitle: 'Browse the Central New Mexico Community College class schedule',
+  bannerBase: 'https://banner.cnm.edu/StudentRegistrationSsb/ssb',
+  proxyBase: 'http://localhost:8010/proxy/StudentRegistrationSsb/ssb',
+  exportStem: 'cnm_courses',
+};
+const BANNER_BASE = UI_CONFIG.bannerBase;
+const PROXY_BASE  = UI_CONFIG.proxyBase;
 
 function apiBase() {
   return document.getElementById('proxyToggle').checked ? PROXY_BASE : BANNER_BASE;
@@ -402,6 +498,10 @@ const $emptyState    = document.getElementById('emptyState');
 const $corsNotice    = document.getElementById('corsNotice');
 const $proxyToggle   = document.getElementById('proxyToggle');
 const $proxyLabel    = document.querySelector('label[for="proxyToggle"]');
+const $pageTitle     = document.getElementById('pageTitle');
+const $pageSubtitle  = document.getElementById('pageSubtitle');
+const $proxyCommand  = document.getElementById('proxyCommand');
+const $schoolPills   = [...document.querySelectorAll('[data-school-switch]')];
 
 // ============================================================
 // Offline data helpers
@@ -497,6 +597,29 @@ function formatBundleTimestamp(value) {
   if (!value) return '';
   const d = new Date(value);
   return Number.isNaN(d.getTime()) ? '' : d.toLocaleString();
+}
+
+function buildSchoolUrl(school) {
+  const url = new URL(window.location.href);
+  if (school === 'cnm') {
+    url.searchParams.delete('school');
+  } else {
+    url.searchParams.set('school', school);
+  }
+  return url.toString();
+}
+
+function activateSchoolSwitch() {
+  for (const pill of $schoolPills) {
+    const isActive = pill.dataset.schoolSwitch === UI_CONFIG.school;
+    pill.classList.toggle('active', isActive);
+    pill.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+  }
+}
+
+function switchSchool(school) {
+  if (!school || school === UI_CONFIG.school) return;
+  window.location.assign(buildSchoolUrl(school));
 }
 
 // ============================================================
@@ -898,7 +1021,7 @@ function exportCSV() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `cnm_courses_${$termSelect.value}.csv`;
+  a.download = `${UI_CONFIG.exportStem}_${$termSelect.value}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -907,6 +1030,14 @@ function exportCSV() {
 // Init
 // ============================================================
 async function init() {
+  if ($pageTitle) $pageTitle.textContent = UI_CONFIG.pageTitle;
+  if ($pageSubtitle) $pageSubtitle.textContent = UI_CONFIG.pageSubtitle;
+  document.title = UI_CONFIG.pageTitle;
+  if ($proxyCommand) {
+    const proxyOrigin = new URL(BANNER_BASE).origin;
+    $proxyCommand.textContent = `npx local-cors-proxy --proxyUrl ${proxyOrigin} --port 8010`;
+  }
+  activateSchoolSwitch();
   buildTableHead();
 
   // Event listeners
@@ -914,6 +1045,9 @@ async function init() {
   $exportBtn.addEventListener('click', exportCSV);
   $subjectSelect.addEventListener('change', applyFilters);
   $statusFilter.addEventListener('change', applyFilters);
+  for (const pill of $schoolPills) {
+    pill.addEventListener('click', () => switchSchool(pill.dataset.schoolSwitch));
+  }
 
   let searchTimeout;
   $searchInput.addEventListener('input', () => {

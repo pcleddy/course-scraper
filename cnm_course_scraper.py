@@ -2,8 +2,8 @@
 """
 CNM Course Scraper
 ==================
-Scrapes all courses from CNM's Ellucian Banner class search system and
-saves them to a CSV file (and optionally Excel).
+Scrapes all courses from a Banner class search system and saves them to
+CSV, Excel, and a browser-friendly JavaScript bundle.
 
 Usage:
     python cnm_course_scraper.py                  # auto-selects first available term
@@ -27,6 +27,9 @@ from datetime import datetime, timezone
 from uuid import uuid4
 
 BASE_URL = "https://banner.cnm.edu/StudentRegistrationSsb/ssb"
+DEFAULT_SCHOOL_LABEL = "CNM"
+DEFAULT_OUTPUT_STEM = "cnm_courses"
+DEFAULT_BUNDLE_NAME = "cnm_courses_data.js"
 
 log = logging.getLogger("cnm_scraper")
 
@@ -389,6 +392,15 @@ def save_web_bundle(rows, path, term_descriptions=None, generated_at=None):
     log.info(f"Saved web bundle: {path}")
 
 
+def build_output_paths(output_dir, output_stem, term_code, bundle_name):
+    """Build the default output paths for a scrape run."""
+    return {
+        "csv": output_dir / f"{output_stem}_{term_code}.csv",
+        "xlsx": output_dir / f"{output_stem}_{term_code}.xlsx",
+        "bundle": output_dir / bundle_name,
+    }
+
+
 def save_xlsx(rows, path, sheet_title="Courses"):
     """Save rows to an Excel file. Returns True on success, False if openpyxl missing."""
     try:
@@ -437,11 +449,38 @@ def save_xlsx(rows, path, sheet_title="Courses"):
     return True
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Scrape CNM course catalog from Banner")
+def run_cli(
+    default_base_url=BASE_URL,
+    default_school_label=DEFAULT_SCHOOL_LABEL,
+    default_output_stem=DEFAULT_OUTPUT_STEM,
+    default_bundle_name=DEFAULT_BUNDLE_NAME,
+):
+    parser = argparse.ArgumentParser(
+        description=f"Scrape {default_school_label} course catalog from Banner"
+    )
     parser.add_argument("--term", help="Term code (e.g. 202580). Default: first available.")
     parser.add_argument("--list-terms", action="store_true", help="List available terms and exit")
     parser.add_argument("--output-dir", default=".", help="Output directory (default: current)")
+    parser.add_argument(
+        "--base-url",
+        default=default_base_url,
+        help=f"Banner base URL (default: {default_base_url})",
+    )
+    parser.add_argument(
+        "--school-label",
+        default=default_school_label,
+        help=f"Label used in console output (default: {default_school_label})",
+    )
+    parser.add_argument(
+        "--output-stem",
+        default=default_output_stem,
+        help=f"Prefix for CSV/XLSX files (default: {default_output_stem})",
+    )
+    parser.add_argument(
+        "--bundle-name",
+        default=default_bundle_name,
+        help=f"Filename for the JS bundle (default: {default_bundle_name})",
+    )
     parser.add_argument("--debug", action="store_true", help="Enable debug logging")
     args = parser.parse_args()
 
@@ -453,13 +492,13 @@ def main():
     output_dir = Path(args.output_dir)
 
     print("=" * 60)
-    print("  CNM Course Scraper")
+    print(f"  {args.school_label} Course Scraper")
     print("=" * 60)
     print()
 
     # Step 1: Initialize
-    print("[1/5] Connecting to CNM Banner...")
-    client = BannerClient()
+    print(f"[1/5] Connecting to {args.school_label} Banner...")
+    client = BannerClient(base_url=args.base_url)
     client.initialize()
     print("  Session established.")
 
@@ -511,21 +550,26 @@ def main():
         sys.exit(0)
 
     # Save
-    csv_path = output_dir / f"cnm_courses_{term_code}.csv"
+    outputs = build_output_paths(output_dir, args.output_stem, term_code, args.bundle_name)
+    csv_path = outputs["csv"]
     save_csv(all_rows, csv_path)
     print(f"\n  Saved CSV:   {csv_path}")
 
-    bundle_path = output_dir / "cnm_courses_data.js"
+    bundle_path = outputs["bundle"]
     save_web_bundle(all_rows, bundle_path, term_descriptions={term_code: term_desc})
     print(f"  Saved Web:   {bundle_path}")
 
-    xlsx_path = output_dir / f"cnm_courses_{term_code}.xlsx"
+    xlsx_path = outputs["xlsx"]
     if save_xlsx(all_rows, xlsx_path, sheet_title=term_desc):
         print(f"  Saved Excel: {xlsx_path}")
     else:
         print("  (Install openpyxl for Excel output: pip install openpyxl)")
 
     print(f"\nDone! {len(all_rows)} sections saved.")
+
+
+def main():
+    run_cli()
 
 
 if __name__ == "__main__":
