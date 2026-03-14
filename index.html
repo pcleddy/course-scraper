@@ -19,12 +19,19 @@
     --gray-700: #374151;
     --gray-800: #1f2937;
     --gray-900: #111827;
+    --green-50: #f0fdf4;
     --green-100: #dcfce7;
+    --green-600: #16a34a;
     --green-700: #15803d;
+    --red-50: #fef2f2;
     --red-100: #fee2e2;
+    --red-600: #dc2626;
     --red-700: #b91c1c;
+    --yellow-50: #fefce8;
     --yellow-100: #fef9c3;
+    --yellow-600: #ca8a04;
     --yellow-700: #a16207;
+    --sidebar-w: 280px;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -34,30 +41,32 @@
     background: var(--gray-50);
     color: var(--gray-800);
     line-height: 1.5;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 
-  /* Header */
+  /* ── Header ── */
   .header {
     background: linear-gradient(135deg, #1e3a5f 0%, var(--blue-700) 100%);
     color: white;
-    padding: 1.5rem 2rem;
+    padding: 1rem 1.5rem;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    flex-shrink: 0;
   }
   .header-inner {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 1rem;
   }
-  .header-copy {
-    min-width: 0;
-  }
-  .header h1 { font-size: 1.5rem; font-weight: 700; }
-  .header p { opacity: 0.85; font-size: 0.875rem; margin-top: 0.25rem; }
+  .header h1 { font-size: 1.25rem; font-weight: 700; }
+  .header p { opacity: 0.8; font-size: 0.8rem; margin-top: 0.125rem; }
   .school-switch {
     display: inline-flex;
-    gap: 0.375rem;
-    padding: 0.25rem;
+    gap: 0.25rem;
+    padding: 0.2rem;
     border-radius: 9999px;
     background: rgba(255,255,255,0.12);
     box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14);
@@ -67,231 +76,456 @@
     border: none;
     border-radius: 9999px;
     background: transparent;
-    color: rgba(255,255,255,0.82);
+    color: rgba(255,255,255,0.8);
     cursor: pointer;
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     font-weight: 700;
-    letter-spacing: 0.02em;
-    padding: 0.5rem 0.85rem;
-    transition: background 0.15s, color 0.15s, transform 0.15s;
+    padding: 0.375rem 0.75rem;
+    transition: all 0.15s;
   }
-  .school-pill:hover {
-    background: rgba(255,255,255,0.1);
-    color: white;
-  }
+  .school-pill:hover { background: rgba(255,255,255,0.1); color: white; }
   .school-pill.active {
     background: white;
     color: var(--blue-700);
-    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
 
-  /* Controls bar */
-  .controls {
+  /* ── Toolbar ── */
+  .toolbar {
     background: white;
     border-bottom: 1px solid var(--gray-200);
-    padding: 1rem 2rem;
+    padding: 0.625rem 1.5rem;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
-    align-items: flex-end;
+    gap: 0.5rem;
+    align-items: center;
+    flex-shrink: 0;
   }
-  .control-group { display: flex; flex-direction: column; gap: 0.25rem; }
-  .control-group label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--gray-500);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  select, .search-input {
-    padding: 0.5rem 0.75rem;
+  .toolbar select, .toolbar input {
+    padding: 0.375rem 0.625rem;
     border: 1px solid var(--gray-300);
     border-radius: 0.375rem;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     background: white;
     color: var(--gray-800);
-    min-width: 180px;
   }
-  select:focus, .search-input:focus {
+  .toolbar select:focus, .toolbar input:focus {
     outline: none;
     border-color: var(--blue-600);
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+    box-shadow: 0 0 0 2px rgba(37,99,235,0.12);
   }
-  .search-input { min-width: 280px; }
-
+  .toolbar .search-input {
+    flex: 1;
+    min-width: 200px;
+    max-width: 360px;
+  }
+  .toolbar-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-right: -0.25rem;
+  }
   .btn {
-    padding: 0.5rem 1rem;
+    padding: 0.375rem 0.875rem;
     border: none;
     border-radius: 0.375rem;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.15s;
   }
-  .btn-primary {
-    background: var(--blue-600);
-    color: white;
-  }
+  .btn-primary { background: var(--blue-600); color: white; }
   .btn-primary:hover { background: var(--blue-700); }
-  .btn-primary:disabled {
-    background: var(--gray-300);
-    cursor: not-allowed;
-  }
-  .btn-secondary {
-    background: white;
-    color: var(--gray-700);
-    border: 1px solid var(--gray-300);
-  }
-  .btn-secondary:hover { background: var(--gray-50); }
-
-  .spacer { flex: 1; }
-
-  /* Status bar */
-  .status-bar {
-    padding: 0.5rem 2rem;
-    font-size: 0.8125rem;
+  .btn-primary:disabled { background: var(--gray-300); cursor: not-allowed; }
+  .btn-sm { padding: 0.25rem 0.625rem; font-size: 0.75rem; }
+  .btn-ghost {
+    background: transparent;
     color: var(--gray-500);
-    background: white;
-    border-bottom: 1px solid var(--gray-200);
+    border: 1px solid var(--gray-200);
+  }
+  .btn-ghost:hover { background: var(--gray-50); color: var(--gray-700); }
+  .spacer { flex: 1; }
+  .proxy-check {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 0.25rem;
+    font-size: 0.6875rem;
+    color: var(--gray-400);
   }
-  .status-bar .count { font-weight: 600; color: var(--gray-700); }
+  .proxy-check input { margin: 0; }
 
-  /* Progress */
+  /* ── Progress ── */
   .progress-wrap {
-    padding: 0 2rem;
     background: white;
     border-bottom: 1px solid var(--gray-200);
-    display: none;
-  }
-  .progress-wrap.active { display: block; padding: 0.75rem 2rem; }
-  .progress-bar-bg {
-    height: 6px;
-    background: var(--gray-200);
-    border-radius: 3px;
+    padding: 0;
+    flex-shrink: 0;
     overflow: hidden;
-    margin-top: 0.375rem;
+    max-height: 0;
+    transition: max-height 0.3s, padding 0.3s;
+  }
+  .progress-wrap.active { max-height: 60px; padding: 0.5rem 1.5rem; }
+  .progress-bar-bg {
+    height: 4px;
+    background: var(--gray-200);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 0.25rem;
   }
   .progress-bar-fill {
     height: 100%;
     background: var(--blue-600);
-    border-radius: 3px;
+    border-radius: 2px;
     transition: width 0.3s;
     width: 0%;
   }
-  .progress-text { font-size: 0.8125rem; color: var(--gray-500); }
+  .progress-text { font-size: 0.75rem; color: var(--gray-500); }
 
-  /* Table */
-  .table-wrap {
-    overflow-x: auto;
-    padding: 0 1rem;
-    margin-top: 0.5rem;
+  /* ── CORS notice ── */
+  .cors-notice {
+    margin: 1rem 1.5rem 0;
+    padding: 0.875rem;
+    background: var(--yellow-50);
+    border: 1px solid #fde68a;
+    border-radius: 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--yellow-700);
+    display: none;
+    flex-shrink: 0;
   }
-  table {
-    width: 100%;
-    border-collapse: collapse;
+  .cors-notice code {
+    background: rgba(0,0,0,0.06);
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+  }
+
+  /* ── Main content area (sidebar + course list) ── */
+  .main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ── Sidebar: subjects ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: white;
+    border-right: 1px solid var(--gray-200);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .sidebar-header {
+    padding: 0.75rem 1rem 0.5rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--gray-100);
+    flex-shrink: 0;
+  }
+  .sidebar-list {
+    overflow-y: auto;
+    flex: 1;
+  }
+  .subj-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid var(--gray-50);
+    transition: background 0.1s;
     font-size: 0.8125rem;
   }
-  thead th {
-    position: sticky;
-    top: 0;
-    background: var(--gray-100);
-    padding: 0.625rem 0.75rem;
-    text-align: left;
-    font-weight: 600;
-    color: var(--gray-600);
-    border-bottom: 2px solid var(--gray-200);
-    white-space: nowrap;
-    cursor: pointer;
-    user-select: none;
+  .subj-item:hover { background: var(--gray-50); }
+  .subj-item.active { background: var(--blue-50); border-left: 3px solid var(--blue-600); }
+  .subj-code {
+    font-weight: 700;
+    color: var(--gray-700);
+    min-width: 44px;
   }
-  thead th:hover { background: var(--gray-200); }
-  thead th .sort-arrow { margin-left: 0.25rem; opacity: 0.4; }
-  thead th.sorted .sort-arrow { opacity: 1; }
-  tbody tr { border-bottom: 1px solid var(--gray-100); }
-  tbody tr:hover { background: var(--blue-50); }
-  td {
-    padding: 0.5rem 0.75rem;
-    white-space: nowrap;
-    max-width: 300px;
+  .subj-name {
+    flex: 1;
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--gray-600);
   }
-  td.wrap { white-space: normal; min-width: 200px; }
+  .subj-count {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--gray-400);
+    background: var(--gray-100);
+    padding: 0.1rem 0.4rem;
+    border-radius: 9999px;
+    flex-shrink: 0;
+  }
+  .subj-dots {
+    display: flex;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+  .subj-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .subj-dot-open { background: var(--green-600); }
+  .subj-dot-closed { background: var(--red-600); }
+  .subj-dot-waitlist { background: var(--yellow-600); }
 
-  /* Badges */
+  /* ── Content: course cards ── */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+  }
+  .content-header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--gray-50);
+    padding: 0.75rem 1.25rem 0.5rem;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .content-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gray-800);
+  }
+  .content-count {
+    font-size: 0.75rem;
+    color: var(--gray-400);
+  }
+  .course-list { padding: 0.5rem 1rem 2rem; }
+
+  /* ── Course row (compact) ── */
+  .course-row {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background 0.1s;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .course-row:hover { background: white; }
+  .course-row.expanded { background: white; border-bottom-color: transparent; }
+  .course-num {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--gray-500);
+    min-width: 48px;
+    font-variant-numeric: tabular-nums;
+  }
+  .course-title-text {
+    flex: 1;
+    font-size: 0.875rem;
+    color: var(--gray-800);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .course-crn {
+    font-size: 0.6875rem;
+    color: var(--gray-400);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── Badge ── */
   .badge {
     display: inline-block;
-    padding: 0.125rem 0.5rem;
+    padding: 0.1rem 0.4rem;
     border-radius: 9999px;
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
     font-weight: 600;
+    flex-shrink: 0;
   }
   .badge-open { background: var(--green-100); color: var(--green-700); }
   .badge-closed { background: var(--red-100); color: var(--red-700); }
   .badge-waitlist { background: var(--yellow-100); color: var(--yellow-700); }
 
-  /* Empty / loading states */
+  /* ── Expanded detail card ── */
+  .course-detail {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: 0 0 0.5rem 0.5rem;
+    margin: 0 0 0.5rem 0;
+    padding: 1rem 1.25rem;
+    display: none;
+    animation: slideDown 0.15s ease-out;
+  }
+  .course-detail.open { display: block; }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.625rem 1.5rem;
+  }
+  .detail-field label {
+    display: block;
+    font-size: 0.625rem;
+    font-weight: 700;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.125rem;
+  }
+  .detail-field span {
+    font-size: 0.8125rem;
+    color: var(--gray-800);
+  }
+  .detail-field .seats-info {
+    font-variant-numeric: tabular-nums;
+  }
+  .seats-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--gray-100);
+    grid-column: 1 / -1;
+  }
+  .seats-bar-bg {
+    flex: 1;
+    max-width: 200px;
+    height: 6px;
+    background: var(--gray-200);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .seats-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s;
+  }
+  .seats-bar-fill.green { background: var(--green-600); }
+  .seats-bar-fill.yellow { background: var(--yellow-600); }
+  .seats-bar-fill.red { background: var(--red-600); }
+  .seats-label {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── Empty state ── */
   .empty-state {
     text-align: center;
     padding: 4rem 2rem;
     color: var(--gray-400);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
-  .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
-  .empty-state p { font-size: 1rem; }
+  .empty-state .icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+  .empty-state p { font-size: 0.9375rem; }
 
   .spinner {
     display: inline-block;
-    width: 18px;
-    height: 18px;
+    width: 14px;
+    height: 14px;
     border: 2px solid var(--gray-300);
     border-top-color: var(--blue-600);
     border-radius: 50%;
     animation: spin 0.6s linear infinite;
     vertical-align: middle;
-    margin-right: 0.5rem;
+    margin-right: 0.375rem;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* CORS notice */
-  .cors-notice {
-    margin: 2rem;
-    padding: 1.25rem;
-    background: var(--yellow-100);
-    border: 1px solid #fde68a;
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-    color: var(--yellow-700);
-    display: none;
+  /* ── Mobile drawer toggle button ── */
+  .drawer-toggle {
+    display: none;          /* hidden on desktop */
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.3rem 0.625rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 0.375rem;
+    background: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--gray-600);
+    cursor: pointer;
   }
-  .cors-notice code {
-    background: rgba(0,0,0,0.08);
-    padding: 0.125rem 0.375rem;
-    border-radius: 0.25rem;
-    font-size: 0.8125rem;
+  .drawer-toggle .hamburger {
+    font-size: 1rem;
+    line-height: 1;
   }
 
-  /* Responsive */
+  /* ── Overlay for mobile drawer ── */
+  .drawer-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 90;
+  }
+  .drawer-overlay.open { display: block; }
+
+  /* ── Responsive ── */
   @media (max-width: 768px) {
-    .header { padding: 1rem; }
-    .header-inner {
-      flex-direction: column;
-      align-items: stretch;
+    :root { --sidebar-w: 220px; }
+    .header { padding: 0.75rem 1rem; }
+    .header-inner { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+    .school-switch { width: 100%; justify-content: stretch; }
+    .school-pill { flex: 1; text-align: center; }
+    .toolbar { padding: 0.5rem 0.75rem; gap: 0.375rem; }
+    .toolbar .search-input { min-width: 140px; }
+    .detail-grid { grid-template-columns: 1fr 1fr; }
+    .seats-bar-wrap { flex-wrap: wrap; }
+  }
+
+  @media (max-width: 600px) {
+    .drawer-toggle { display: inline-flex; }
+
+    /* Sidebar becomes a slide-out drawer */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 100vh;
+      z-index: 100;
+      transform: translateX(-100%);
+      transition: transform 0.25s ease;
+      box-shadow: none;
+      width: 280px;
+      min-width: 280px;
     }
-    .school-switch {
-      width: 100%;
-      justify-content: stretch;
+    .sidebar.drawer-open {
+      transform: translateX(0);
+      box-shadow: 4px 0 24px rgba(0,0,0,0.15);
     }
-    .school-pill {
-      flex: 1;
-      text-align: center;
-    }
-    .controls { padding: 0.75rem 1rem; }
-    .search-input { min-width: 100%; }
-    .table-wrap { padding: 0 0.5rem; }
-    td, th { padding: 0.375rem 0.5rem; }
+    .content { width: 100%; }
+
+    /* Bigger touch targets */
+    .subj-item { padding: 0.75rem 1rem; font-size: 0.875rem; }
+    .course-row { padding: 0.75rem; gap: 0.5rem; }
+    .course-title-text { white-space: normal; font-size: 0.8125rem; }
+    .course-detail { padding: 0.875rem; }
+    .detail-grid { grid-template-columns: 1fr; gap: 0.5rem; }
+    .seats-bar-wrap { flex-direction: column; align-items: flex-start; gap: 0.375rem; }
+    .toolbar .search-input { min-width: 100px; max-width: none; flex: 1; }
+    .toolbar-label { display: none; }
+    .proxy-check { display: none; }
+    .content-header { padding: 0.625rem 0.75rem 0.375rem; }
+    .course-list { padding: 0.25rem 0.5rem 2rem; }
   }
 </style>
 </head>
@@ -299,7 +533,7 @@
 
 <div class="header">
   <div class="header-inner">
-    <div class="header-copy">
+    <div>
       <h1 id="pageTitle">CNM Course Catalog</h1>
       <p id="pageSubtitle">Browse the Central New Mexico Community College class schedule</p>
     </div>
@@ -317,58 +551,40 @@
   <br><br>
   <code id="proxyCommand">npx local-cors-proxy --proxyUrl https://banner.cnm.edu --port 8010</code>
   <br><br>
-  Then check the "Use CORS Proxy" box below and reload. The bundled local snapshot does not
-  need this. Alternatively, use a browser extension that adds CORS headers.
+  Then check the "Use CORS Proxy" box below and reload.
 </div>
 
-<div class="controls" id="controls">
-  <div class="control-group">
-    <label>Term</label>
-    <select id="termSelect" disabled>
-      <option>Loading terms...</option>
-    </select>
-  </div>
+<div class="toolbar" id="toolbar">
+  <button class="drawer-toggle" id="drawerToggle" style="display:none;">
+    <span class="hamburger">☰</span> Subjects
+  </button>
 
-  <div class="control-group">
-    <label>Subject</label>
-    <select id="subjectSelect" disabled>
-      <option value="">All Subjects</option>
-    </select>
-  </div>
+  <span class="toolbar-label">Term</span>
+  <select id="termSelect" disabled>
+    <option>Loading...</option>
+  </select>
 
-  <div class="control-group">
-    <label>Status</label>
-    <select id="statusFilter">
-      <option value="">All</option>
-      <option value="open">Open</option>
-      <option value="closed">Closed</option>
-      <option value="waitlist">Waitlist Available</option>
-    </select>
-  </div>
+  <button class="btn btn-primary btn-sm" id="loadBtn" disabled>Load Courses</button>
 
-  <div class="control-group">
-    <label>Search</label>
-    <input type="text" class="search-input" id="searchInput"
-           placeholder="Search by title, CRN, instructor, course number...">
-  </div>
+  <input type="text" class="search-input" id="searchInput"
+         placeholder="Search courses, instructors, CRN..."
+         style="display:none;">
 
-  <div class="control-group">
-    <label>&nbsp;</label>
-    <button class="btn btn-primary" id="loadBtn" disabled>Load Courses</button>
-  </div>
+  <span class="toolbar-label" id="statusLabel" style="display:none;">Status</span>
+  <select id="statusFilter" style="display:none;">
+    <option value="">All</option>
+    <option value="open">Open</option>
+    <option value="closed">Closed</option>
+    <option value="waitlist">Waitlist</option>
+  </select>
 
   <div class="spacer"></div>
 
-  <div class="control-group">
-    <label>&nbsp;</label>
-    <button class="btn btn-secondary" id="exportBtn" disabled>Export CSV</button>
-  </div>
+  <button class="btn btn-ghost btn-sm" id="exportBtn" style="display:none;">Export CSV</button>
 
-  <div class="control-group" style="flex-direction:row; align-items:center; gap:0.375rem; margin-top:1.2rem;">
+  <div class="proxy-check">
     <input type="checkbox" id="proxyToggle">
-    <label for="proxyToggle" style="font-size:0.75rem; text-transform:none; letter-spacing:normal; cursor:pointer;">
-      Use CORS Proxy (localhost:8010)
-    </label>
+    <label for="proxyToggle">CORS Proxy</label>
   </div>
 </div>
 
@@ -379,25 +595,27 @@
   </div>
 </div>
 
-<div class="status-bar" id="statusBar" style="display:none;">
-  <span>Showing <span class="count" id="shownCount">0</span> of <span class="count" id="totalCount">0</span> sections</span>
-  <span id="lastLoaded"></span>
+<div class="drawer-overlay" id="drawerOverlay"></div>
+
+<div class="main" id="mainArea">
+  <!-- Sidebar: subjects (becomes drawer on mobile) -->
+  <div class="sidebar" id="sidebar" style="display:none;">
+    <div class="sidebar-header">
+      Subjects <span id="subjectTotal"></span>
+    </div>
+    <div class="sidebar-list" id="subjectList"></div>
+  </div>
+
+  <!-- Content area -->
+  <div class="content" id="contentArea">
+    <div class="empty-state" id="emptyState">
+      <div class="icon">📚</div>
+      <p>Select a term and click <strong>Load Courses</strong> to get started.</p>
+    </div>
+  </div>
 </div>
 
-<div class="table-wrap">
-  <table id="courseTable" style="display:none;">
-    <thead>
-      <tr id="tableHead"></tr>
-    </thead>
-    <tbody id="tableBody"></tbody>
-  </table>
-</div>
-
-<div class="empty-state" id="emptyState">
-  <div class="icon">📚</div>
-  <p>Select a term and click <strong>Load Courses</strong> to browse the catalog.</p>
-</div>
-
+<!-- School config bootstrap -->
 <script>
 (() => {
   const params = new URLSearchParams(window.location.search);
@@ -422,14 +640,14 @@
       exportStem: 'unm_courses',
     },
   };
-
   window.COURSE_UI_CONFIG = configBySchool[school] || configBySchool.cnm;
   document.write(`<script src="${window.COURSE_UI_CONFIG.bundleSrc}"><\/script>`);
 })();
 </script>
+
 <script>
 // ============================================================
-// Configuration
+// Config
 // ============================================================
 const UI_CONFIG = window.COURSE_UI_CONFIG || {
   school: 'cnm',
@@ -446,132 +664,99 @@ function apiBase() {
   return document.getElementById('proxyToggle').checked ? PROXY_BASE : BANNER_BASE;
 }
 
-// Visible columns in order
-const TABLE_COLS = [
-  { key: 'status',          label: 'Status',       sortable: true,  wrap: false },
-  { key: 'courseReferenceNumber', label: 'CRN',     sortable: true,  wrap: false },
-  { key: 'subject',         label: 'Subj',         sortable: true,  wrap: false },
-  { key: 'courseNumber',    label: 'Num',           sortable: true,  wrap: false },
-  { key: 'courseTitle',     label: 'Title',         sortable: true,  wrap: true },
-  { key: 'creditHours',    label: 'Cr',            sortable: true,  wrap: false },
-  { key: 'enrollment',     label: 'Enrl',          sortable: true,  wrap: false },
-  { key: 'maximumEnrollment', label: 'Cap',        sortable: true,  wrap: false },
-  { key: 'seatsAvailable', label: 'Seats',         sortable: true,  wrap: false },
-  { key: 'waitCount',      label: 'Wait',          sortable: true,  wrap: false },
-  { key: 'faculty_names',  label: 'Instructor',    sortable: true,  wrap: true },
-  { key: 'meeting_days',   label: 'Days',          sortable: true,  wrap: false },
-  { key: 'meeting_times',  label: 'Time',          sortable: true,  wrap: false },
-  { key: 'meeting_building', label: 'Building',    sortable: true,  wrap: false },
-  { key: 'meeting_room',   label: 'Room',          sortable: true,  wrap: false },
-  { key: 'campusDescription', label: 'Campus',     sortable: true,  wrap: false },
-  { key: 'instructionalMethodDescription', label: 'Method', sortable: true, wrap: false },
-];
-
 // ============================================================
 // State
 // ============================================================
-let allSections = [];
-let displayedSections = [];
-let sortCol = null;
-let sortDir = 'asc';
+let allSections = [];          // every section after load
+let subjectMap = new Map();    // code -> { code, description, sections[] }
+let activeSubject = null;      // currently selected subject code
+let expandedCRN = null;        // currently expanded course CRN
+let currentSearch = '';
+let currentStatus = '';
 
 // ============================================================
 // DOM refs
 // ============================================================
-const $termSelect    = document.getElementById('termSelect');
-const $subjectSelect = document.getElementById('subjectSelect');
-const $statusFilter  = document.getElementById('statusFilter');
-const $searchInput   = document.getElementById('searchInput');
-const $loadBtn       = document.getElementById('loadBtn');
-const $exportBtn     = document.getElementById('exportBtn');
-const $progressWrap  = document.getElementById('progressWrap');
-const $progressText  = document.getElementById('progressText');
-const $progressFill  = document.getElementById('progressFill');
-const $statusBar     = document.getElementById('statusBar');
-const $shownCount    = document.getElementById('shownCount');
-const $totalCount    = document.getElementById('totalCount');
-const $lastLoaded    = document.getElementById('lastLoaded');
-const $tableHead     = document.getElementById('tableHead');
-const $tableBody     = document.getElementById('tableBody');
-const $courseTable    = document.getElementById('courseTable');
-const $emptyState    = document.getElementById('emptyState');
-const $corsNotice    = document.getElementById('corsNotice');
-const $proxyToggle   = document.getElementById('proxyToggle');
-const $proxyLabel    = document.querySelector('label[for="proxyToggle"]');
-const $pageTitle     = document.getElementById('pageTitle');
-const $pageSubtitle  = document.getElementById('pageSubtitle');
-const $proxyCommand  = document.getElementById('proxyCommand');
-const $schoolPills   = [...document.querySelectorAll('[data-school-switch]')];
+const $ = id => document.getElementById(id);
+const $termSelect   = $('termSelect');
+const $loadBtn      = $('loadBtn');
+const $searchInput  = $('searchInput');
+const $statusFilter = $('statusFilter');
+const $statusLabel  = $('statusLabel');
+const $exportBtn    = $('exportBtn');
+const $progressWrap = $('progressWrap');
+const $progressText = $('progressText');
+const $progressFill = $('progressFill');
+const $sidebar      = $('sidebar');
+const $subjectList  = $('subjectList');
+const $subjectTotal = $('subjectTotal');
+const $contentArea  = $('contentArea');
+const $emptyState   = $('emptyState');
+const $corsNotice   = $('corsNotice');
+const $proxyToggle  = $('proxyToggle');
+const $proxyLabel   = document.querySelector('label[for="proxyToggle"]');
+const $pageTitle    = $('pageTitle');
+const $pageSubtitle = $('pageSubtitle');
+const $proxyCommand = $('proxyCommand');
+const $schoolPills  = [...document.querySelectorAll('[data-school-switch]')];
+const $drawerToggle = $('drawerToggle');
+const $drawerOverlay = $('drawerOverlay');
 
 // ============================================================
 // Offline data helpers
 // ============================================================
 const OFFLINE_DATA = normalizeOfflineBundle(window.CNM_COURSE_DATA);
 
-function toFiniteNumber(value) {
-  const n = Number(value);
+function toFiniteNumber(v) {
+  const n = Number(v);
   return Number.isFinite(n) ? n : 0;
 }
 
-function normalizeOfflineSection(section) {
-  const seats = toFiniteNumber(section?.seatsAvailable);
-  const waitAvailable = toFiniteNumber(section?.waitAvailable);
-  let status = section?.status || 'closed';
-  if (!section?.status) {
+function normalizeOfflineSection(s) {
+  const seats = toFiniteNumber(s?.seatsAvailable);
+  const waitAvailable = toFiniteNumber(s?.waitAvailable);
+  let status = s?.status || 'closed';
+  if (!s?.status) {
     if (seats > 0) status = 'open';
     else if (waitAvailable > 0) status = 'waitlist';
   }
-
   return {
-    ...section,
-    status,
-    term: String(section?.term || ''),
-    courseReferenceNumber: String(section?.courseReferenceNumber || ''),
-    subject: String(section?.subject || ''),
-    subjectDescription: String(section?.subjectDescription || ''),
-    courseNumber: String(section?.courseNumber || ''),
-    courseTitle: String(section?.courseTitle || ''),
-    creditHours: section?.creditHours ?? section?.creditHourLow ?? '',
-    maximumEnrollment: section?.maximumEnrollment ?? '',
-    enrollment: section?.enrollment ?? '',
-    seatsAvailable: section?.seatsAvailable ?? 0,
-    waitCapacity: section?.waitCapacity ?? '',
-    waitCount: section?.waitCount ?? '',
-    waitAvailable: section?.waitAvailable ?? 0,
-    campusDescription: String(section?.campusDescription || ''),
-    instructionalMethodDescription: String(section?.instructionalMethodDescription || ''),
-    scheduleTypeDescription: String(section?.scheduleTypeDescription || ''),
-    faculty_names: String(section?.faculty_names || 'TBA'),
-    meeting_days: String(section?.meeting_days || ''),
-    meeting_times: String(section?.meeting_times || ''),
-    meeting_building: String(section?.meeting_building || ''),
-    meeting_room: String(section?.meeting_room || ''),
+    ...s, status,
+    term: String(s?.term || ''),
+    courseReferenceNumber: String(s?.courseReferenceNumber || ''),
+    subject: String(s?.subject || ''),
+    subjectDescription: String(s?.subjectDescription || ''),
+    courseNumber: String(s?.courseNumber || ''),
+    courseTitle: String(s?.courseTitle || ''),
+    creditHours: s?.creditHours ?? s?.creditHourLow ?? '',
+    maximumEnrollment: s?.maximumEnrollment ?? '',
+    enrollment: s?.enrollment ?? '',
+    seatsAvailable: s?.seatsAvailable ?? 0,
+    waitCapacity: s?.waitCapacity ?? '',
+    waitCount: s?.waitCount ?? '',
+    waitAvailable: s?.waitAvailable ?? 0,
+    campusDescription: String(s?.campusDescription || ''),
+    instructionalMethodDescription: String(s?.instructionalMethodDescription || ''),
+    scheduleTypeDescription: String(s?.scheduleTypeDescription || ''),
+    faculty_names: String(s?.faculty_names || 'TBA'),
+    meeting_days: String(s?.meeting_days || ''),
+    meeting_times: String(s?.meeting_times || ''),
+    meeting_building: String(s?.meeting_building || ''),
+    meeting_room: String(s?.meeting_room || ''),
   };
 }
 
 function normalizeOfflineBundle(bundle) {
   if (!bundle || !Array.isArray(bundle.sections) || !bundle.sections.length) return null;
-
   const sections = bundle.sections.map(normalizeOfflineSection);
   const termMap = new Map();
-
-  for (const term of (bundle.terms || [])) {
-    const code = String(term?.code || '');
-    if (!code) continue;
-    termMap.set(code, {
-      code,
-      description: String(term?.description || `Term ${code}`),
-    });
+  for (const t of (bundle.terms || [])) {
+    const code = String(t?.code || '');
+    if (code) termMap.set(code, { code, description: String(t?.description || `Term ${code}`) });
   }
-
-  for (const section of sections) {
-    if (!section.term || termMap.has(section.term)) continue;
-    termMap.set(section.term, {
-      code: section.term,
-      description: `Term ${section.term}`,
-    });
+  for (const s of sections) {
+    if (s.term && !termMap.has(s.term)) termMap.set(s.term, { code: s.term, description: `Term ${s.term}` });
   }
-
   return {
     generatedAt: bundle.generatedAt || '',
     terms: [...termMap.values()].sort((a, b) => b.code.localeCompare(a.code)),
@@ -593,55 +778,45 @@ function populateTermOptions(terms) {
   }
 }
 
-function formatBundleTimestamp(value) {
-  if (!value) return '';
-  const d = new Date(value);
+function formatBundleTimestamp(v) {
+  if (!v) return '';
+  const d = new Date(v);
   return Number.isNaN(d.getTime()) ? '' : d.toLocaleString();
 }
 
 function buildSchoolUrl(school) {
   const url = new URL(window.location.href);
-  if (school === 'cnm') {
-    url.searchParams.delete('school');
-  } else {
-    url.searchParams.set('school', school);
-  }
+  school === 'cnm' ? url.searchParams.delete('school') : url.searchParams.set('school', school);
   return url.toString();
 }
 
 function activateSchoolSwitch() {
-  for (const pill of $schoolPills) {
-    const isActive = pill.dataset.schoolSwitch === UI_CONFIG.school;
-    pill.classList.toggle('active', isActive);
-    pill.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+  for (const p of $schoolPills) {
+    const on = p.dataset.schoolSwitch === UI_CONFIG.school;
+    p.classList.toggle('active', on);
+    p.setAttribute('aria-pressed', on);
   }
 }
 
 function switchSchool(school) {
-  if (!school || school === UI_CONFIG.school) return;
-  window.location.assign(buildSchoolUrl(school));
+  if (school && school !== UI_CONFIG.school) window.location.assign(buildSchoolUrl(school));
 }
 
 // ============================================================
 // Banner API helpers
 // ============================================================
 async function bannerFetch(path, options = {}) {
-  const url = apiBase() + path;
-  const resp = await fetch(url, {
-    credentials: 'include',
-    ...options,
-  });
+  const resp = await fetch(apiBase() + path, { credentials: 'include', ...options });
   if (!resp.ok) throw new Error(`HTTP ${resp.status} for ${path}`);
   return resp;
 }
 
 async function getTerms() {
-  const r = await bannerFetch('/classSearch/getTerms?offset=1&max=50&searchTerm=');
-  return r.json();
+  return (await bannerFetch('/classSearch/getTerms?offset=1&max=50&searchTerm=')).json();
 }
 
 async function selectTerm(termCode) {
-  await bannerFetch(`/term/search?mode=search`, {
+  await bannerFetch('/term/search?mode=search', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: `term=${termCode}`,
@@ -652,11 +827,10 @@ async function getSubjects(termCode) {
   const all = [];
   let offset = 1;
   while (true) {
-    const r = await bannerFetch(
+    const page = await (await bannerFetch(
       `/classSearch/get_subject?term=${termCode}&offset=${offset}&max=200&searchTerm=`
-    );
-    const page = await r.json();
-    if (!page || page.length === 0) break;
+    )).json();
+    if (!page || !page.length) break;
     all.push(...page);
     if (page.length < 200) break;
     offset += 200;
@@ -674,23 +848,19 @@ async function searchCourses(termCode, subjectCode, offset = 0, pageSize = 500) 
     + `&pageOffset=${offset}&pageMaxSize=${pageSize}`
     + `&sortColumn=subjectDescription&sortDirection=asc`;
   if (subjectCode) qs += `&txt_subject=${subjectCode}`;
-
-  const r = await bannerFetch(`/searchResults/searchResults?${qs}`);
-  return r.json();
+  return (await bannerFetch(`/searchResults/searchResults?${qs}`)).json();
 }
 
 // ============================================================
-// Data extraction (mirrors Python extract_row)
+// Data extraction (live API mode)
 // ============================================================
 function extractRow(section) {
   const faculty = section.faculty || [];
   const facultyNames = faculty.length
-    ? faculty.map(f => f.displayName || 'TBA').join('; ')
-    : 'TBA';
+    ? faculty.map(f => f.displayName || 'TBA').join('; ') : 'TBA';
 
   const meetings = section.meetingsFaculty || [];
   const daysList = [], timesList = [], buildings = [], rooms = [];
-
   for (const m of meetings) {
     const mt = m.meetingTime || {};
     let days = '';
@@ -699,13 +869,8 @@ function extractRow(section) {
       if (mt[d]) days += abbr;
     }
     daysList.push(days || 'TBA');
-
     const b = mt.beginTime || '', e = mt.endTime || '';
-    if (b && e) {
-      timesList.push(`${b.slice(0,2)}:${b.slice(2)}-${e.slice(0,2)}:${e.slice(2)}`);
-    } else {
-      timesList.push('TBA');
-    }
+    timesList.push(b && e ? `${b.slice(0,2)}:${b.slice(2)}-${e.slice(0,2)}:${e.slice(2)}` : 'TBA');
     buildings.push(mt.buildingDescription || '');
     rooms.push(mt.room || '');
   }
@@ -743,6 +908,242 @@ function extractRow(section) {
 }
 
 // ============================================================
+// Build subject index after load
+// ============================================================
+function buildSubjectIndex() {
+  subjectMap = new Map();
+  for (const s of allSections) {
+    if (!subjectMap.has(s.subject)) {
+      subjectMap.set(s.subject, {
+        code: s.subject,
+        description: s.subjectDescription || s.subject,
+        sections: [],
+      });
+    }
+    subjectMap.get(s.subject).sections.push(s);
+  }
+  // Sort sections within each subject by courseNumber
+  for (const entry of subjectMap.values()) {
+    entry.sections.sort((a, b) => a.courseNumber.localeCompare(b.courseNumber, undefined, { numeric: true }));
+  }
+}
+
+// ============================================================
+// Render sidebar
+// ============================================================
+function renderSidebar() {
+  $sidebar.style.display = 'flex';
+  $subjectList.innerHTML = '';
+  $subjectTotal.textContent = `(${subjectMap.size})`;
+
+  const sorted = [...subjectMap.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+  const frag = document.createDocumentFragment();
+
+  for (const [code, data] of sorted) {
+    const el = document.createElement('div');
+    el.className = 'subj-item' + (code === activeSubject ? ' active' : '');
+    el.dataset.subject = code;
+
+    // Status dots summary
+    const open = data.sections.filter(s => s.status === 'open').length;
+    const closed = data.sections.filter(s => s.status === 'closed').length;
+    const wait = data.sections.filter(s => s.status === 'waitlist').length;
+
+    el.innerHTML = `
+      <span class="subj-code">${code}</span>
+      <span class="subj-name" title="${data.description}">${data.description}</span>
+      <span class="subj-dots">
+        ${open ? `<span class="subj-dot subj-dot-open" title="${open} open"></span>` : ''}
+        ${wait ? `<span class="subj-dot subj-dot-waitlist" title="${wait} waitlist"></span>` : ''}
+        ${closed ? `<span class="subj-dot subj-dot-closed" title="${closed} closed"></span>` : ''}
+      </span>
+      <span class="subj-count">${data.sections.length}</span>
+    `;
+
+    el.addEventListener('click', () => selectSubject(code));
+    frag.appendChild(el);
+  }
+  $subjectList.appendChild(frag);
+}
+
+function selectSubject(code) {
+  activeSubject = code;
+  expandedCRN = null;
+
+  // Update sidebar highlight
+  for (const el of $subjectList.children) {
+    el.classList.toggle('active', el.dataset.subject === code);
+  }
+
+  // Close drawer on mobile
+  closeDrawer();
+
+  renderCourseList();
+}
+
+// ============================================================
+// Render course list for selected subject
+// ============================================================
+function getFilteredSections() {
+  let sections;
+  if (activeSubject && subjectMap.has(activeSubject)) {
+    sections = subjectMap.get(activeSubject).sections;
+  } else {
+    sections = allSections;
+  }
+
+  // Apply status filter
+  if (currentStatus) {
+    sections = sections.filter(s => s.status === currentStatus);
+  }
+
+  // Apply search
+  if (currentSearch) {
+    const q = currentSearch.toLowerCase();
+    sections = sections.filter(s => {
+      const hay = [s.courseTitle, s.courseReferenceNumber, s.subject,
+        s.courseNumber, s.faculty_names, s.campusDescription,
+        s.instructionalMethodDescription, s.subjectDescription].join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+  }
+
+  return sections;
+}
+
+function renderCourseList() {
+  const sections = getFilteredSections();
+  $contentArea.innerHTML = '';
+
+  if (!sections.length) {
+    $contentArea.innerHTML = `
+      <div class="empty-state">
+        <div class="icon">🔍</div>
+        <p>No sections match${activeSubject ? ` in ${activeSubject}` : ''}.${currentSearch ? ' Try a different search.' : ''}</p>
+      </div>`;
+    return;
+  }
+
+  const subjData = activeSubject && subjectMap.has(activeSubject) ? subjectMap.get(activeSubject) : null;
+  const title = subjData ? `${subjData.code} — ${subjData.description}` : 'All Courses';
+
+  const header = document.createElement('div');
+  header.className = 'content-header';
+  header.innerHTML = `
+    <span class="content-title">${title}</span>
+    <span class="content-count">${sections.length} section${sections.length !== 1 ? 's' : ''}</span>
+  `;
+  $contentArea.appendChild(header);
+
+  const list = document.createElement('div');
+  list.className = 'course-list';
+
+  for (const s of sections) {
+    // Compact row
+    const row = document.createElement('div');
+    row.className = 'course-row' + (expandedCRN === s.courseReferenceNumber ? ' expanded' : '');
+    row.innerHTML = `
+      <span class="course-num">${s.courseNumber}</span>
+      <span class="badge badge-${s.status}">${s.status === 'waitlist' ? 'Wait' : s.status === 'open' ? 'Open' : 'Full'}</span>
+      <span class="course-title-text" title="${esc(s.courseTitle)}">${esc(s.courseTitle)}</span>
+      <span class="course-crn">${s.courseReferenceNumber}</span>
+    `;
+    row.addEventListener('click', () => toggleDetail(s.courseReferenceNumber));
+    list.appendChild(row);
+
+    // Detail card (hidden by default)
+    const detail = document.createElement('div');
+    detail.className = 'course-detail' + (expandedCRN === s.courseReferenceNumber ? ' open' : '');
+    detail.id = `detail-${s.courseReferenceNumber}`;
+    detail.innerHTML = buildDetailHTML(s);
+    list.appendChild(detail);
+  }
+
+  $contentArea.appendChild(list);
+}
+
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function toggleDetail(crn) {
+  if (expandedCRN === crn) {
+    expandedCRN = null;
+  } else {
+    expandedCRN = crn;
+  }
+  renderCourseList();
+
+  // Scroll the expanded card into view
+  if (expandedCRN) {
+    const el = document.getElementById(`detail-${expandedCRN}`);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+function buildDetailHTML(s) {
+  const enrl = toFiniteNumber(s.enrollment);
+  const cap = toFiniteNumber(s.maximumEnrollment);
+  const seats = toFiniteNumber(s.seatsAvailable);
+  const pct = cap > 0 ? Math.round((enrl / cap) * 100) : 0;
+  const barColor = pct >= 100 ? 'red' : pct >= 85 ? 'yellow' : 'green';
+
+  return `
+    <div class="detail-grid">
+      <div class="detail-field">
+        <label>CRN</label>
+        <span>${s.courseReferenceNumber}</span>
+      </div>
+      <div class="detail-field">
+        <label>Credits</label>
+        <span>${s.creditHours || 'N/A'}</span>
+      </div>
+      <div class="detail-field">
+        <label>Instructor</label>
+        <span>${esc(s.faculty_names)}</span>
+      </div>
+      <div class="detail-field">
+        <label>Days</label>
+        <span>${s.meeting_days || 'TBA'}</span>
+      </div>
+      <div class="detail-field">
+        <label>Time</label>
+        <span>${s.meeting_times || 'TBA'}</span>
+      </div>
+      <div class="detail-field">
+        <label>Building / Room</label>
+        <span>${[s.meeting_building, s.meeting_room].filter(Boolean).join(' ') || 'TBA'}</span>
+      </div>
+      <div class="detail-field">
+        <label>Campus</label>
+        <span>${s.campusDescription || 'N/A'}</span>
+      </div>
+      <div class="detail-field">
+        <label>Method</label>
+        <span>${s.instructionalMethodDescription || 'N/A'}</span>
+      </div>
+      <div class="detail-field">
+        <label>Type</label>
+        <span>${s.scheduleTypeDescription || 'N/A'}</span>
+      </div>
+      <div class="detail-field">
+        <label>Waitlist</label>
+        <span>${s.waitCount || 0} / ${s.waitCapacity || 0}</span>
+      </div>
+      <div class="seats-bar-wrap">
+        <span class="seats-label">${enrl} / ${cap} enrolled</span>
+        <div class="seats-bar-bg">
+          <div class="seats-bar-fill ${barColor}" style="width:${Math.min(pct, 100)}%"></div>
+        </div>
+        <span class="seats-label">${seats} seat${seats !== 1 ? 's' : ''} left</span>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
 // Load all courses
 // ============================================================
 async function loadCourses() {
@@ -750,90 +1151,75 @@ async function loadCourses() {
   if (!termCode) return;
 
   $loadBtn.disabled = true;
-  $loadBtn.innerHTML = '<span class="spinner"></span>Loading...';
-  $exportBtn.disabled = true;
+  $loadBtn.innerHTML = '<span class="spinner"></span>Loading';
   $progressWrap.classList.add('active');
-  $courseTable.style.display = 'none';
+  $sidebar.style.display = 'none';
+  $contentArea.innerHTML = '';
   $emptyState.style.display = 'none';
-  $statusBar.style.display = 'none';
   allSections = [];
+  activeSubject = null;
+  expandedCRN = null;
 
   try {
     if (usingOfflineBundle()) {
-      $progressText.textContent = 'Loading bundled course data...';
-      $progressFill.style.width = '35%';
+      $progressText.textContent = 'Loading bundled data...';
+      $progressFill.style.width = '50%';
 
       allSections = OFFLINE_DATA.sections.filter(s => s.term === termCode);
       if (!allSections.length && OFFLINE_DATA.terms.length === 1) {
         allSections = [...OFFLINE_DATA.sections];
       }
 
-      $progressText.textContent = `Done! Loaded ${allSections.length} sections from local data.`;
       $progressFill.style.width = '100%';
-
-      populateSubjectFilter();
-      applyFilters();
-
-      const bundleStamp = formatBundleTimestamp(OFFLINE_DATA.generatedAt);
-      $lastLoaded.textContent = bundleStamp
-        ? `Bundled snapshot from ${bundleStamp}`
-        : 'Loaded from local bundled data';
-      $exportBtn.disabled = !allSections.length;
-
-      setTimeout(() => { $progressWrap.classList.remove('active'); }, 600);
-      return;
-    }
-
-    // 1) Select term in server session
-    $progressText.textContent = 'Setting term in session...';
-    $progressFill.style.width = '2%';
-    await selectTerm(termCode);
-
-    // 2) Get subjects
-    $progressText.textContent = 'Fetching subjects...';
-    $progressFill.style.width = '5%';
-    const subjects = await getSubjects(termCode);
-
-    // 3) Scrape each subject
-    for (let i = 0; i < subjects.length; i++) {
-      const subj = subjects[i];
-      const pct = 5 + Math.round((i / subjects.length) * 90);
-      $progressText.textContent = `Loading ${subj.description} (${i + 1}/${subjects.length})...`;
-      $progressFill.style.width = pct + '%';
-
-      await resetSearch();
+      $progressText.textContent = `Loaded ${allSections.length} sections.`;
+      setTimeout(() => $progressWrap.classList.remove('active'), 500);
+    } else {
+      // Live API
+      $progressText.textContent = 'Setting term...';
+      $progressFill.style.width = '2%';
       await selectTerm(termCode);
 
-      let offset = 0;
-      while (true) {
-        const data = await searchCourses(termCode, subj.code, offset, 500);
-        if (!data || !data.data || data.data.length === 0) break;
+      $progressText.textContent = 'Fetching subjects...';
+      $progressFill.style.width = '5%';
+      const subjects = await getSubjects(termCode);
 
-        for (const section of data.data) {
-          allSections.push(extractRow(section));
+      for (let i = 0; i < subjects.length; i++) {
+        const subj = subjects[i];
+        const pct = 5 + Math.round((i / subjects.length) * 90);
+        $progressText.textContent = `${subj.description} (${i + 1}/${subjects.length})`;
+        $progressFill.style.width = pct + '%';
+
+        await resetSearch();
+        await selectTerm(termCode);
+
+        let offset = 0;
+        while (true) {
+          const data = await searchCourses(termCode, subj.code, offset, 500);
+          if (!data?.data?.length) break;
+          for (const section of data.data) allSections.push(extractRow(section));
+          offset += 500;
+          if (offset >= (data.totalCount || 0)) break;
         }
-
-        offset += 500;
-        if (offset >= (data.totalCount || 0)) break;
       }
+
+      $progressFill.style.width = '100%';
+      $progressText.textContent = `Loaded ${allSections.length} sections.`;
+      setTimeout(() => $progressWrap.classList.remove('active'), 1200);
     }
 
-    $progressText.textContent = `Done! Loaded ${allSections.length} sections.`;
-    $progressFill.style.width = '100%';
+    // Build index and show UI
+    buildSubjectIndex();
+    renderSidebar();
+    showPostLoadControls();
 
-    populateSubjectFilter();
-    applyFilters();
-
-    $lastLoaded.textContent = `Loaded at ${new Date().toLocaleTimeString()}`;
-    $exportBtn.disabled = false;
-
-    setTimeout(() => { $progressWrap.classList.remove('active'); }, 1500);
+    // Auto-select first subject
+    const first = [...subjectMap.keys()].sort()[0];
+    if (first) selectSubject(first);
 
   } catch (err) {
     console.error('Load error:', err);
     $progressText.textContent = `Error: ${err.message}`;
     $progressFill.style.width = '0%';
-
     if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
       $corsNotice.style.display = 'block';
     }
@@ -843,170 +1229,42 @@ async function loadCourses() {
   }
 }
 
-// ============================================================
-// Populate subject dropdown from loaded data
-// ============================================================
-function populateSubjectFilter() {
-  const subjects = new Map();
-  for (const s of allSections) {
-    if (s.subject && !subjects.has(s.subject)) {
-      subjects.set(s.subject, s.subjectDescription || s.subject);
-    }
-  }
-  const sorted = [...subjects.entries()].sort((a, b) => a[0].localeCompare(b[0]));
-
-  $subjectSelect.innerHTML = '<option value="">All Subjects</option>';
-  for (const [code, desc] of sorted) {
-    const opt = document.createElement('option');
-    opt.value = code;
-    opt.textContent = `${code} - ${desc}`;
-    $subjectSelect.appendChild(opt);
-  }
-  $subjectSelect.disabled = false;
+function showPostLoadControls() {
+  $searchInput.style.display = '';
+  $statusFilter.style.display = '';
+  $statusLabel.style.display = '';
+  $exportBtn.style.display = '';
+  // Show drawer toggle on mobile (CSS controls actual visibility via media query)
+  $drawerToggle.style.display = '';
 }
 
 // ============================================================
-// Filtering + searching
+// Mobile drawer
 // ============================================================
-function applyFilters() {
-  const subj = $subjectSelect.value;
-  const status = $statusFilter.value;
-  const query = $searchInput.value.toLowerCase().trim();
-
-  displayedSections = allSections.filter(s => {
-    if (subj && s.subject !== subj) return false;
-    if (status && s.status !== status) return false;
-    if (query) {
-      const hay = [
-        s.courseTitle, s.courseReferenceNumber, s.subject,
-        s.courseNumber, s.faculty_names, s.campusDescription,
-        s.instructionalMethodDescription, s.subjectDescription,
-      ].join(' ').toLowerCase();
-      if (!hay.includes(query)) return false;
-    }
-    return true;
-  });
-
-  if (sortCol !== null) {
-    applySorting();
-  }
-
-  renderTable();
+function openDrawer() {
+  $sidebar.classList.add('drawer-open');
+  $drawerOverlay.classList.add('open');
 }
 
-function applySorting() {
-  const key = TABLE_COLS[sortCol].key;
-  displayedSections.sort((a, b) => {
-    let va = a[key] ?? '', vb = b[key] ?? '';
-    // Try numeric comparison
-    const na = Number(va), nb = Number(vb);
-    if (!isNaN(na) && !isNaN(nb)) {
-      return sortDir === 'asc' ? na - nb : nb - na;
-    }
-    va = String(va).toLowerCase();
-    vb = String(vb).toLowerCase();
-    if (va < vb) return sortDir === 'asc' ? -1 : 1;
-    if (va > vb) return sortDir === 'asc' ? 1 : -1;
-    return 0;
-  });
-}
-
-// ============================================================
-// Render table
-// ============================================================
-function buildTableHead() {
-  $tableHead.innerHTML = '';
-  for (let i = 0; i < TABLE_COLS.length; i++) {
-    const col = TABLE_COLS[i];
-    const th = document.createElement('th');
-    th.textContent = col.label;
-    if (col.sortable) {
-      const arrow = document.createElement('span');
-      arrow.className = 'sort-arrow';
-      arrow.textContent = sortCol === i ? (sortDir === 'asc' ? ' ▲' : ' ▼') : ' ⇅';
-      th.appendChild(arrow);
-      if (sortCol === i) th.classList.add('sorted');
-      th.addEventListener('click', () => {
-        if (sortCol === i) {
-          sortDir = sortDir === 'asc' ? 'desc' : 'asc';
-        } else {
-          sortCol = i;
-          sortDir = 'asc';
-        }
-        applyFilters();
-        buildTableHead();
-      });
-    }
-    $tableHead.appendChild(th);
-  }
-}
-
-function renderTable() {
-  $tableBody.innerHTML = '';
-  $courseTable.style.display = displayedSections.length ? 'table' : 'none';
-  $statusBar.style.display = allSections.length ? 'flex' : 'none';
-  $emptyState.style.display = displayedSections.length ? 'none' : 'block';
-
-  if (!displayedSections.length && allSections.length) {
-    $emptyState.querySelector('.icon').textContent = '🔍';
-    $emptyState.querySelector('p').textContent = 'No courses match your filters.';
-  }
-
-  $shownCount.textContent = displayedSections.length.toLocaleString();
-  $totalCount.textContent = allSections.length.toLocaleString();
-
-  // Virtual-ish rendering: cap at 2000 visible rows for performance
-  const cap = Math.min(displayedSections.length, 2000);
-  const frag = document.createDocumentFragment();
-
-  for (let r = 0; r < cap; r++) {
-    const section = displayedSections[r];
-    const tr = document.createElement('tr');
-
-    for (const col of TABLE_COLS) {
-      const td = document.createElement('td');
-      if (col.wrap) td.classList.add('wrap');
-
-      if (col.key === 'status') {
-        const badge = document.createElement('span');
-        badge.className = 'badge badge-' + section.status;
-        badge.textContent = section.status === 'waitlist' ? 'Waitlist'
-          : section.status === 'open' ? 'Open' : 'Closed';
-        td.appendChild(badge);
-      } else {
-        td.textContent = section[col.key] ?? '';
-      }
-      tr.appendChild(td);
-    }
-    frag.appendChild(tr);
-  }
-
-  $tableBody.appendChild(frag);
-
-  if (displayedSections.length > cap) {
-    const tr = document.createElement('tr');
-    const td = document.createElement('td');
-    td.colSpan = TABLE_COLS.length;
-    td.style.textAlign = 'center';
-    td.style.padding = '1rem';
-    td.style.color = 'var(--gray-400)';
-    td.textContent = `Showing first ${cap} of ${displayedSections.length} results. Use filters to narrow down.`;
-    tr.appendChild(td);
-    $tableBody.appendChild(tr);
-  }
+function closeDrawer() {
+  $sidebar.classList.remove('drawer-open');
+  $drawerOverlay.classList.remove('open');
 }
 
 // ============================================================
 // CSV Export
 // ============================================================
 function exportCSV() {
-  if (!displayedSections.length) return;
+  const sections = getFilteredSections();
+  if (!sections.length) return;
 
-  const keys = TABLE_COLS.map(c => c.key);
-  const header = TABLE_COLS.map(c => c.label);
+  const keys = ['courseReferenceNumber','subject','courseNumber','courseTitle','creditHours',
+    'enrollment','maximumEnrollment','seatsAvailable','waitCount','waitCapacity',
+    'faculty_names','meeting_days','meeting_times','meeting_building','meeting_room',
+    'campusDescription','instructionalMethodDescription','status'];
 
-  const rows = [header.join(',')];
-  for (const s of displayedSections) {
+  const rows = [keys.join(',')];
+  for (const s of sections) {
     const vals = keys.map(k => {
       let v = String(s[k] ?? '');
       if (v.includes(',') || v.includes('"') || v.includes('\n')) {
@@ -1034,25 +1292,31 @@ async function init() {
   if ($pageSubtitle) $pageSubtitle.textContent = UI_CONFIG.pageSubtitle;
   document.title = UI_CONFIG.pageTitle;
   if ($proxyCommand) {
-    const proxyOrigin = new URL(BANNER_BASE).origin;
-    $proxyCommand.textContent = `npx local-cors-proxy --proxyUrl ${proxyOrigin} --port 8010`;
+    const origin = new URL(BANNER_BASE).origin;
+    $proxyCommand.textContent = `npx local-cors-proxy --proxyUrl ${origin} --port 8010`;
   }
   activateSchoolSwitch();
-  buildTableHead();
 
-  // Event listeners
   $loadBtn.addEventListener('click', loadCourses);
   $exportBtn.addEventListener('click', exportCSV);
-  $subjectSelect.addEventListener('change', applyFilters);
-  $statusFilter.addEventListener('change', applyFilters);
-  for (const pill of $schoolPills) {
-    pill.addEventListener('click', () => switchSchool(pill.dataset.schoolSwitch));
+  $drawerToggle.addEventListener('click', openDrawer);
+  $drawerOverlay.addEventListener('click', closeDrawer);
+  $statusFilter.addEventListener('change', () => {
+    currentStatus = $statusFilter.value;
+    renderSidebar();
+    renderCourseList();
+  });
+  for (const p of $schoolPills) {
+    p.addEventListener('click', () => switchSchool(p.dataset.schoolSwitch));
   }
 
   let searchTimeout;
   $searchInput.addEventListener('input', () => {
     clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(applyFilters, 250);
+    searchTimeout = setTimeout(() => {
+      currentSearch = $searchInput.value.trim();
+      renderCourseList();
+    }, 200);
   });
 
   if (usingOfflineBundle()) {
@@ -1061,9 +1325,7 @@ async function init() {
     $loadBtn.disabled = false;
     $proxyToggle.checked = false;
     $proxyToggle.disabled = true;
-    if ($proxyLabel) {
-      $proxyLabel.textContent = 'Live proxy not needed with bundled data';
-    }
+    if ($proxyLabel) $proxyLabel.textContent = 'Bundled data';
     return;
   }
 
